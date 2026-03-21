@@ -1,0 +1,59 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Orbitron:wght@400..900&display=swap');
+
+:root{
+    --white-bg: #F2F2F2;
+    --light-grey: #E9E9E9;
+    --medium-grey: #C2C2C2;
+    --dark-grey: #7C7C7C;
+    --purple-1: #3C0059;
+    --purple-2: #414077;
+    --black: #000; 
+
+    --font-logo: "Orbitron", sans-serif;
+    --font: "Montserrat", sans-serif;
+}
+
+body{
+    background-image: url("../src/assets/images/bg.png");
+    background-size:cover;
+    background-position:center;
+    font-family: var(--font);
+}
+
+*{    
+    margin: 0;
+    padding: 0;
+}
+
+button{
+    height: 40px;
+    width: 130px;
+    border-radius: 5px;
+    border: none;
+    background: var(--purple-1);
+    color: var(--white-bg);
+    font-family: var(--font);
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover{
+    background: var(--purple-2);
+}
+
+input{
+    padding: 20px;
+    height: 25px;
+    background: var(--light-grey);
+    border: none;
+    border-radius: 10px;
+}
+
+input::placeholder{
+    padding: 20px;
+    font-family: var(--font);
+    font-weight: 500;
+    font-size: 15px;
+    color: var(--medium-grey);
+}

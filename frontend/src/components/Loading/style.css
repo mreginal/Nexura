@@ -1,0 +1,17 @@
+.container-loading{
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.container-loading img{
+    height: 300px;
+}
+
+.container-loading h1{
+    color: var(--purple-1);
+    font-family: var(--font-logo);
+    font-size: 90px;
+}

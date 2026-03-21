@@ -1,0 +1,101 @@
+.container-login{
+    display: flex;
+    justify-content: space-between;
+    box-sizing: border-box;
+}
+
+/*Login do lado esquerdo*/
+
+.login-left{
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    padding: 50px;
+    gap: 10%;
+}
+
+.login-left header{
+    display: flex;
+    align-items: end;
+    gap: 10px;
+}
+
+.login-left header h1{
+    font-family: var(--font-logo);
+    font-size: 50px;
+    color: var(--purple-1);
+}
+
+#h1-line{
+    font-weight: 200;
+    color: var(--black);
+}
+
+.login-left header h2{
+    font-size: 40px;
+}
+
+.subcontainer-login{
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+    width: 50vw;
+}
+
+.header-left{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.header-left h3{
+    font-size: 22px;
+}
+
+.form-login{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+#button-login-reset-password{
+    display: flex;
+    flex-direction: column;
+    align-self: flex-end;
+    gap: 5px;
+}
+
+#button-login-reset-password a{
+    align-self: flex-end;
+    font-size: 14px;
+    color: var(--dark-grey);
+    text-decoration: none;
+}
+
+.register-login{
+    display: flex;
+    font-weight: 600;
+    gap: 10px;
+}
+
+.register-login p{
+    text-decoration: underline;
+}
+
+.register-login a{
+    color: var(--purple-1);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/*Login do lado direito*/
+
+.login-right{
+    height: 100vh;
+    display: flex;
+}
+
+.login-right img{
+    height: 100%;
+}
