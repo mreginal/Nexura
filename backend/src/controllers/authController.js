@@ -9,7 +9,10 @@ export const register = async (req, res) => {
       email,
       cpf,
       username,
+      cep,
       endereco,
+      numero,
+      bairro,
       cidade,
       estado,
       password
@@ -17,7 +20,7 @@ export const register = async (req, res) => {
 
     if (
       !name || !email || !cpf || !username ||
-      !endereco || !cidade || !estado || !password
+      !endereco || !bairro || !cidade || !estado || !password
     ) {
       return res.status(400).json({ error: "Preencha todos os campos" })
     }
@@ -37,7 +40,10 @@ export const register = async (req, res) => {
       email,
       cpf,
       username,
+      cep,
       endereco,
+      numero,
+      bairro,
       cidade,
       estado,
       password: hashedPassword

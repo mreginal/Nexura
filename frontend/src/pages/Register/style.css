@@ -1,0 +1,9 @@
+.container-register{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-sizing: border-box;
+    padding: 50px;
+    justify-content: center;
+}
+

@@ -15,7 +15,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         unique:true
     },
+    cep: String,
     street: String,
+    number: String,
+    neighborhood: String,
     city: String,
     state: String,
     password:{

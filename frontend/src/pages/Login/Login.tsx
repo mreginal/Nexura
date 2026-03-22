@@ -3,6 +3,7 @@ import nexura from "../../assets/images/nexura-logo.png"
 import { loginUser } from "../../services/auth"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
+import Header from "../../components/Header/Header"
 
 export default function Login() {
 
@@ -24,11 +25,7 @@ export default function Login() {
     <>
       <div className="container-login">
         <div className="login-left">
-            <header id="header-init">
-              <h1>Nexura</h1>
-              <h1 id="h1-line">|</h1>
-              <h2>Login</h2>
-            </header>
+            <Header title={"Login"}/>
 
             <div className="subcontainer-login">
               <div className="header-left">
