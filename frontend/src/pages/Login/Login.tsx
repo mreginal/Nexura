@@ -4,6 +4,7 @@ import { loginUser } from "../../services/auth"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import Header from "../../components/Header/Header"
+import { FaEnvelope } from "react-icons/fa6"
 
 export default function Login() {
 
@@ -38,7 +39,7 @@ export default function Login() {
                 <input type="password" placeholder="Senha" onChange={(e)=>setPassword(e.target.value)}/>
                 <div id="button-login-reset-password">
                   <button onClick={handleLogin}>Entrar</button>
-                  <a href="/">Esqueceu a senha?</a>
+                  <a href="/forgot-password">Esqueceu a senha?</a>
                 </div>
               </div>
             </div>
