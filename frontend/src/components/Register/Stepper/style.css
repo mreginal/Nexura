@@ -1,0 +1,33 @@
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.step-item {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.step-number {
+  font-weight: bold;
+  color: #999;
+  margin-right: 8px;
+}
+
+.step-number.active {
+  color: #5b0a8d; /* roxo Nexura */
+}
+
+.step-bar {
+  flex: 1;
+  height: 6px;
+  background: #ddd;
+  border-radius: 10px;
+}
+
+.step-bar.active {
+  background: #5b0a8d;
+}
