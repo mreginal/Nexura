@@ -57,3 +57,11 @@ input::placeholder{
     font-size: 15px;
     color: var(--medium-grey);
 }
+
+.error-text {
+    align-self: flex-end;
+    margin-right: 10px;
+    color: #ff4d4f;
+    font-size: 14px;
+    margin-top: 4px;
+}
