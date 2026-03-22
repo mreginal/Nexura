@@ -21,11 +21,51 @@ export const sendResetEmail = async (to, link) => {
       to,
       subject: "Recuperação de senha - Nexura",
       html: `
-        <h2>Recuperação de senha</h2>
-        <p>Clique no link abaixo para redefinir sua senha:</p>
-        <a href="${link}">${link}</a>
-        <p>Este link expira em 30 minutos.</p>
-      `
+            <div style="font-family: Arial, sans-serif; padding: 20px;">
+              
+              <h1 style="color: #3C0059; font-size: 40px; margin-bottom: 10px;">
+                Nexura
+              </h1>
+
+              <p style="font-size: 20px; color: #7C7C7C; font-weight: bold;">
+                Recuperação de senha
+              </p>
+
+              <p style="margin: 20px 0;">
+                Clique no botão abaixo para redefinir sua senha:
+              </p>
+
+              <a href="${link}" style="
+                display: inline-block;
+                padding: 12px 24px;
+                text-decoration: none;
+                font-weight: bold;
+                margin-top: 10px;
+                background-color: #3C0059;
+                border-radius: 15px;
+                color: #FFFFFF;
+              ">
+                Redefinir senha
+              </a>
+
+              <p style="
+                font-size: 14px;
+                color: #C2C2C2;
+                margin-top: 30px;
+              ">
+                Este link expira em 30 minutos.
+              </p>
+
+              <div style="margin-top: 40px;">
+                <img 
+                  src="https://i.imgur.com/S0qfvwG.png"
+                  alt="Nexura"
+                  style="width: 100%; max-width: 500px; border-radius: 10px;"
+                />
+              </div>
+
+            </div>
+          `
     })
 
     console.log("Email enviado:", info.response)
