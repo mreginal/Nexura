@@ -38,7 +38,7 @@ export default function Login() {
                 <input type="password" placeholder="Senha" onChange={(e)=>setPassword(e.target.value)}/>
                 <div id="button-login-reset-password">
                   <button onClick={handleLogin}>Entrar</button>
-                  <a href="/">Esqueceu a senha?</a>
+                  <a href="/forgot-password">Esqueceu a senha?</a>
                 </div>
               </div>
             </div>
