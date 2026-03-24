@@ -14,7 +14,7 @@ export default function NavRight(){
                     <li>Amigo 2</li>
                     <li>Amigo 3</li>
                 </div>
-                <Link to={"/profile/friends"} className="nav-link">Ver todos</Link>
+                <Link to="/profile" state={{tab:"friends"}} className="nav-link">Ver todos</Link>
             </div>
             <div className="nav-groups">
                 <h2> <FaUserGroup/> Grupos</h2>

@@ -106,3 +106,10 @@
     height: 100%;
     width: 100%;
 }
+
+#button-edit-profile{
+    background: none;
+    color: var(--dark-grey);
+    font-size: 30px;
+    align-self: flex-end;
+}

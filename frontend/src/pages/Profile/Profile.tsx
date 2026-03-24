@@ -3,12 +3,22 @@ import Nav from "../../components/Navs/NavLeft/Nav";
 import NavRight from "../../components/Navs/NavRight/NavRight";
 import { useEffect, useState } from "react";
 import api from "../../services/api";
+import { useLocation } from "react-router-dom";
+import type { LocationState } from "../../types/types";
+import EditProfileModal from "../../components/EditProfileModal/EditProfileModal";
+import { FaEdit } from "react-icons/fa";
+import { getImageUrl } from "../../utils/getImageUrl";
 
 export default function Profile(){
   const [user, setUser] = useState<any>(null)
   const [posts, setPosts] = useState<any[]>([])
   const [loading, setLoading ] = useState(true)
-  const [activeTab, setActiveTab] = useState("posts")
+  const location = useLocation()
+  const state = location.state as LocationState | undefined;
+  const defaultTab = location.state?.tab || "posts"
+  const [activeTab, setActiveTab] = useState(defaultTab)
+  const [modalOpen, setModalOpen] = useState(false)
+
   
   useEffect(()=>{
     async function  loadProfile() {
@@ -38,13 +48,19 @@ export default function Profile(){
         <div className="container-profile">
             <Nav/>
             <div className="subcontainer-profile">
-              <div className="cover-profile" style={{backgroundImage: `url(${user.coverImage})`}}></div>
+              <div className="cover-profile" style={{backgroundImage: `url(${getImageUrl(user.coverImage)})`}}></div>
               <div className="profile-infos">
                 <div className="infos">
-                  <img src={user.profileImage} alt="Foto de Perfil" className="avatar"/>
+                  <img src={getImageUrl(user.profileImage)} alt="Foto de Perfil" className="avatar"/>
                   <h2>{user.name}</h2>
                 </div>
-                <p>{user.bio || `"Biografia de ${user.name}"`}</p>
+                <div className="infos">
+                  <p>{`${user.bio}` || `"Biografia de ${user.name}"`}</p>
+                  <div className="progress-bar">
+
+                  </div>
+                  <button id="button-edit-profile" onClick={() => setModalOpen(true)}><FaEdit/></button>
+                </div>
               </div>
               <div className="tabs-container">
                 <button className={activeTab === "posts" ? "tab active" : "tab"} onClick={() => setActiveTab("posts")}>
@@ -55,7 +71,7 @@ export default function Profile(){
                   Sobre
                 </button>
 
-                <button className={activeTab === "friends" ? "tab active" : "tab"} onClick={() => setActiveTab("friends")}>
+                <button className={activeTab === "friends" ? "tab active" : "tab"} onClick={() => setActiveTab("friends")}>com
                   Amigos
                 </button>
               </div>
@@ -88,6 +104,13 @@ export default function Profile(){
                 )}
               </div>
             </div>
+            {modalOpen && (
+              <EditProfileModal 
+                user={user} 
+                onClose={() => setModalOpen(false)} 
+                onUpdate={(updatedUser) => setUser(updatedUser)} 
+              />
+            )}
             <NavRight/>
         </div>
     </>

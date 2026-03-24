@@ -32,3 +32,14 @@ export type Step3Props = {
   formData: FormData
   password: string
 }
+
+
+export type LocationState ={
+  tab?: String
+}
+
+export type Modal ={
+  user:any,
+  onClose: () => void,
+  onUpdate: (user: any) => void
+}
