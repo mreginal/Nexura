@@ -4,7 +4,6 @@ import { loginUser } from "../../services/auth"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import Header from "../../components/Header/Header"
-import { FaEnvelope } from "react-icons/fa6"
 
 export default function Login() {
 

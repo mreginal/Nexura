@@ -1,0 +1,18 @@
+.container-feed {
+    display: flex;
+    height: 100vh;
+    box-sizing: border-box;
+}
+
+.subcontainer-feed {
+    width: 100%;
+    margin-left: 220px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 40px;
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

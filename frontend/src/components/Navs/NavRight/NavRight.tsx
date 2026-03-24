@@ -1,13 +1,9 @@
 import { BsPersonHeart } from "react-icons/bs"
 import "./style.css"
-import { useLocation, useNavigate } from 'react-router-dom'
 import { Link } from "react-router-dom"
 import { FaRankingStar, FaUserGroup } from "react-icons/fa6"
 
 export default function NavRight(){
-    const location = useLocation()
-    const navigate = useNavigate()
-
     return (
         <div>
         <nav className="nav-right">

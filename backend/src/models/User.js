@@ -26,7 +26,16 @@ const userSchema = new mongoose.Schema({
         required:true    
     },
     resetPasswordToken: String,
-    resetPasswordExpires:Date
+    resetPasswordExpires:Date,
+    bio: String,
+    profileImage: {
+        type: String,
+        default: "https://res.cloudinary.com/dvaoigpfv/image/upload/v1774317968/profile-default_opxczd.png"
+    },
+    coverImage: { 
+        type: String,
+        default: "https://res.cloudinary.com/dvaoigpfv/image/upload/v1774318345/Nexura_1_lqqubt.png"
+    }
 }, {timestamps:true})
 
 export default mongoose.model("User", userSchema)

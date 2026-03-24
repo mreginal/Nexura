@@ -9,13 +9,12 @@ export const registerUser = async (data:any) =>{
     }
 }
 
-export const loginUser = async (data: any) => {
+export const loginUser = async (data: {email: string, password: string}) => {
   try {
     const response = await api.post("/auth/login", data)
 
-    const token = response.data.token
-
-    localStorage.setItem("token", token)
+    localStorage.setItem("token", response.data.token)
+    localStorage.setItem("userId", response.data.user.id)
 
     return response.data
   } catch (error: any) {
