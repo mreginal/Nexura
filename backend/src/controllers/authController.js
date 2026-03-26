@@ -83,7 +83,15 @@ export const login = async (req, res) => {
       { expiresIn: "1d" }
     );
 
-    res.json({ token })
+    res.json({ 
+      token,
+      user:{
+        id: user._id,
+        name: user.name,
+        profileImage: user.profileImage,
+        coverImage: user.coverImage
+      }
+    })
 
   } catch (err) {
     res.status(500).json({ error: err.message })

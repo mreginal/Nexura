@@ -1,0 +1,40 @@
+.nav-right{
+    height: 100vh;
+    width: 220px;
+    display: flex;
+    flex-direction: column;
+    border-left: 2px solid var(--light-grey);
+    box-sizing: border-box;
+    background: rgba(255,255,255, 0.2);
+    backdrop-filter: blur(1px);
+}
+
+.nav-friends, .nav-groups, .nav-ranking{
+    height: 200px;
+    padding-top: 40px;
+    border-bottom: 2px solid var(--light-grey);
+    width: 100%;
+    justify-self: flex-start;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.nav-ranking{
+    border: none;
+}
+
+.nav-friends h2, .nav-groups h2, .nav-ranking h2{
+    color: var(--purple-2);
+    margin-bottom: 30px;
+}
+
+.nav-link{
+    align-self: flex-end;
+    padding: 20px;
+    color: var(--purple-2);
+    font-size: 14px;
+    font-weight: bold;
+}
+
+
