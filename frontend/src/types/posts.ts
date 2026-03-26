@@ -25,7 +25,7 @@ export interface CreatePostProps{
 
 export interface PostCardProps{
   post: IPost,
-  onDelete: (postId: string) => void,
+  onEdit: (postId: IPost) => void,
   currentUserId: string
 }
 

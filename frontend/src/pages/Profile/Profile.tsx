@@ -9,6 +9,7 @@ import EditProfileModal from "../../components/EditProfileModal/EditProfileModal
 import { FaEdit } from "react-icons/fa"
 import { getImageUrl } from "../../utils/getImageUrl"
 import PostCard from "../../components/Post/PostCard"
+import EditPostModal from "../../components/Post/EditPostModal"
 
 export default function Profile() {
   const [user, setUser] = useState<any>(null)
@@ -19,6 +20,7 @@ export default function Profile() {
   const defaultTab = location.state?.tab || "posts"
   const [activeTab, setActiveTab] = useState(defaultTab)
   const [modalOpen, setModalOpen] = useState(false)
+  const [editingPost, setEditingPost] = useState<any>(null)
 
   useEffect(() => {
     async function loadProfile() {
@@ -54,6 +56,29 @@ export default function Profile() {
   if (!user) return <p>Erro ao carregar perfil</p>
 
   const currentUserId = user._id
+
+  function handleOpenEdit(post: any) {
+  setEditingPost(post) }
+
+  async function handleSaveEdit(postId: string, newContent: string) {
+  try {
+    const response = await api.put(`/posts/${postId}`, {
+      content: newContent
+    })
+
+    const updatedPost = response.data.post
+
+    setPosts((prevPosts) =>
+      prevPosts.map((post) =>
+        post._id === postId ? updatedPost : post
+      )
+    )
+
+    setEditingPost(null)
+  } catch (error) {
+    console.error("Erro ao editar post:", error)
+    alert("Não foi possível editar o post.")
+  }}
 
   return (
     <>
@@ -125,6 +150,7 @@ export default function Profile() {
                         },
                       }}
                       onDelete={handleDeletePost}
+                      onEdit={handleOpenEdit}
                       currentUserId={currentUserId}
                     />
                   ))
@@ -151,6 +177,14 @@ export default function Profile() {
             user={user}
             onClose={() => setModalOpen(false)}
             onUpdate={(updatedUser) => setUser(updatedUser)}
+          />
+        )}
+
+        {editingPost && (
+          <EditPostModal
+            post={editingPost}
+            onClose={() => setEditingPost(null)}
+            onSave={handleSaveEdit}
           />
         )}
 

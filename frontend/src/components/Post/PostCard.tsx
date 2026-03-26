@@ -1,9 +1,9 @@
-import { FaBookmark, FaHeart, FaShare, FaTrash } from "react-icons/fa"
+import { FaBookmark, FaHeart, FaShare, FaTrash, FaEdit } from "react-icons/fa"
 import type { PostCardProps } from "../../types/posts"
 import { getImageUrl } from "../../utils/getImageUrl"
 import { TbMessageCircleFilled } from "react-icons/tb"
 
-export default function PostCard({ post, onDelete, currentUserId }: PostCardProps) {
+export default function PostCard({ post, onEdit, currentUserId }: PostCardProps) {
   const isOwner = post.user._id === currentUserId
 
   return (
@@ -22,9 +22,13 @@ export default function PostCard({ post, onDelete, currentUserId }: PostCardProp
         </div>
 
         {isOwner && (
-          <button onClick={() => onDelete(post._id)} id="btn-delete-post" title="Apagar post"> <FaTrash /> </button>
+          <div>
+            <button onClick={() => onEdit(post)} title="Editar post" id="edit-post-btn">
+              <FaEdit />
+            </button>
+            
+          </div>
         )}
-
       </div>
 
       <p className="post-content">{post.content}</p>
@@ -39,12 +43,12 @@ export default function PostCard({ post, onDelete, currentUserId }: PostCardProp
 
       <div className="post-actions">
         <div id="post-actions-right">
-          <span> <FaHeart /> {post.likes}</span>
-          <span> <TbMessageCircleFilled /> {post.commentsCount}</span>
-          <span> <FaShare /> {post.shares}</span>
+          <span><FaHeart /> {post.likes}</span>
+          <span><TbMessageCircleFilled /> {post.commentsCount}</span>
+          <span><FaShare /> {post.shares}</span>
         </div>
         <div>
-          <span> <FaBookmark /> {post.saves}</span>
+          <span><FaBookmark /> {post.saves}</span>
         </div>
       </div>
     </div>

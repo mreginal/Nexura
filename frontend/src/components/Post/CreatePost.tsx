@@ -44,7 +44,7 @@ const handleCreatePost = async () => {
 
 return (
 <div className="modal-overlay">
-  <div className="modal-create-post" onClick={(e) => e.stopPropagation()}>
+  <div className="modal" onClick={(e) => e.stopPropagation()}>
     <div className="modal-header">
       <h2>Criar publicação</h2>
       <button id="close" onClick={onClose}><IoCloseCircleOutline/></button>
