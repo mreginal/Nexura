@@ -13,6 +13,11 @@
     --font: "Montserrat", sans-serif;
 }
 
+html{
+    overflow-y: scroll;
+    scrollbar-gutter: stable;
+}
+
 body{
     background-image: url("../src/assets/images/bg.png");
     background-size:cover;

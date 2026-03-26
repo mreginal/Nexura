@@ -1,121 +1,195 @@
 import "./style.css"
-import Nav from "../../components/Navs/NavLeft/Nav";
-import NavRight from "../../components/Navs/NavRight/NavRight";
-import { useEffect, useState } from "react";
-import api from "../../services/api";
-import { useLocation } from "react-router-dom";
-import type { LocationState } from "../../types/types";
-import EditProfileModal from "../../components/EditProfileModal/EditProfileModal";
-import { FaEdit } from "react-icons/fa";
-import { getImageUrl } from "../../utils/getImageUrl";
+import Nav from "../../components/Navs/NavLeft/Nav"
+import NavRight from "../../components/Navs/NavRight/NavRight"
+import { useEffect, useState } from "react"
+import api from "../../services/api"
+import { useLocation } from "react-router-dom"
+import type { LocationState } from "../../types/types"
+import EditProfileModal from "../../components/EditProfileModal/EditProfileModal"
+import { FaEdit } from "react-icons/fa"
+import { getImageUrl } from "../../utils/getImageUrl"
+import PostCard from "../../components/Post/PostCard"
+import EditPostModal from "../../components/Post/EditPostModal"
 
-export default function Profile(){
+export default function Profile() {
   const [user, setUser] = useState<any>(null)
   const [posts, setPosts] = useState<any[]>([])
-  const [loading, setLoading ] = useState(true)
+  const [loading, setLoading] = useState(true)
   const location = useLocation()
-  const state = location.state as LocationState | undefined;
+  const state = location.state as LocationState | undefined
   const defaultTab = location.state?.tab || "posts"
   const [activeTab, setActiveTab] = useState(defaultTab)
   const [modalOpen, setModalOpen] = useState(false)
+  const [editingPost, setEditingPost] = useState<any>(null)
 
-  
-  useEffect(()=>{
-    async function  loadProfile() {
+  useEffect(() => {
+    async function loadProfile() {
       try {
         const response = await api.get("/me")
-        
-        console.log(response.data.user)
-
         setUser(response.data.user)
         setPosts(response.data.posts)
       } catch (error) {
-        console.error("Erro ao carregar perfil")
-      } finally{
+      } finally {
         setLoading(false)
       }
     }
+
     loadProfile()
-  },[])
+  }, [])
 
-  if(loading) return <p>Carregando...</p>
+  async function handleDeletePost(postId: string) {
+    const confirmDelete = window.confirm("Tem certeza que deseja apagar este post?")
+    if (!confirmDelete) return
 
-  if(!user) return <p>Erro ao carregar perfil</p>
+    try {
+      await api.delete(`/posts/${postId}`)
 
+      setPosts((prevPosts) => prevPosts.filter((post) => post._id !== postId))
+    } catch (error) {
+      console.error("Erro ao apagar post:", error)
+      alert("Não foi possível apagar o post.")
+    }
+  }
+
+  if (loading) return <p>Carregando...</p>
+
+  if (!user) return <p>Erro ao carregar perfil</p>
+
+  const currentUserId = user._id
+
+  function handleOpenEdit(post: any) {
+  setEditingPost(post) }
+
+  async function handleSaveEdit(postId: string, newContent: string) {
+  try {
+    const response = await api.put(`/posts/${postId}`, {
+      content: newContent
+    })
+
+    const updatedPost = response.data.post
+
+    setPosts((prevPosts) =>
+      prevPosts.map((post) =>
+        post._id === postId ? updatedPost : post
+      )
+    )
+
+    setEditingPost(null)
+  } catch (error) {
+    console.error("Erro ao editar post:", error)
+    alert("Não foi possível editar o post.")
+  }}
 
   return (
     <>
-        <div className="container-profile">
-            <Nav/>
-            <div className="subcontainer-profile">
-              <div className="cover-profile" style={{backgroundImage: `url(${getImageUrl(user.coverImage)})`}}></div>
-              <div className="profile-infos">
-                <div className="infos">
-                  <img src={getImageUrl(user.profileImage)} alt="Foto de Perfil" className="avatar"/>
-                  <h2>{user.name}</h2>
-                </div>
-                <div className="infos">
-                  <p>{`${user.bio}` || `"Biografia de ${user.name}"`}</p>
-                  <div className="progress-bar">
+      <div className="container-profile">
+        <Nav />
+        <div className="subcontainer-profile">
+          <div
+            className="cover-profile"
+            style={{ backgroundImage: `url(${getImageUrl(user.coverImage)})` }}
+          ></div>
 
-                  </div>
-                  <button id="button-edit-profile" onClick={() => setModalOpen(true)}><FaEdit/></button>
-                </div>
-              </div>
-              <div className="tabs-container">
-                <button className={activeTab === "posts" ? "tab active" : "tab"} onClick={() => setActiveTab("posts")}>
-                  Postagens
-                </button>
-
-                <button className={activeTab === "about" ? "tab active" : "tab"} onClick={() => setActiveTab("about")}>
-                  Sobre
-                </button>
-
-                <button className={activeTab === "friends" ? "tab active" : "tab"} onClick={() => setActiveTab("friends")}>com
-                  Amigos
-                </button>
-              </div>
-              <div className="tab-content">
-                {activeTab === "posts" && (
-                  <div className="posts">
-                    {posts.length === 0 ? (
-                      <p id="notpost">Não há nenhuma postagem</p>
-                    ) : (
-                      posts.map(post => (
-                        <div key={post._id} className="post">
-                          <p>{post.content}</p>
-                          {post.image && <img src={post.image} />}
-                        </div>
-                      ))
-                    )}
-                  </div>
-                )}
-
-                {activeTab === "about" && (
-                  <div className="about">
-                    <p>{user.bio || `Biografia de ${user.name}`}</p>
-                  </div>
-                )}
-
-                {activeTab === "friends" && (
-                  <div className="friends">
-                    <p>Lista de amigos (em breve)</p>
-                  </div>
-                )}
-              </div>
-            </div>
-            
-            {modalOpen && (
-              <EditProfileModal 
-                user={user} 
-                onClose={() => setModalOpen(false)} 
-                onUpdate={(updatedUser) => setUser(updatedUser)} 
+          <div className="profile-infos">
+            <div className="infos">
+              <img
+                src={getImageUrl(user.profileImage)}
+                alt="Foto de Perfil"
+                className="avatar"
               />
+              <h2>{user.name}</h2>
+            </div>
+
+            <div className="infos">
+              <p>{user.bio || `Biografia de ${user.name}`}</p>
+              <div className="progress-bar"></div>
+              <button id="button-edit-profile" onClick={() => setModalOpen(true)}>
+                <FaEdit />
+              </button>
+            </div>
+          </div>
+
+          <div className="tabs-container">
+            <button
+              className={activeTab === "posts" ? "tab active" : "tab"}
+              onClick={() => setActiveTab("posts")}
+            >
+              Postagens
+            </button>
+
+            <button
+              className={activeTab === "about" ? "tab active" : "tab"}
+              onClick={() => setActiveTab("about")}
+            >
+              Sobre
+            </button>
+
+            <button
+              className={activeTab === "friends" ? "tab active" : "tab"}
+              onClick={() => setActiveTab("friends")}
+            >
+              Amigos
+            </button>
+          </div>
+
+          <div className="tab-content">
+            {activeTab === "posts" && (
+              <div className="posts">
+                {posts.length === 0 ? (
+                  <p id="notpost">Não há nenhuma postagem</p>
+                ) : (
+                  posts.map((post) => (
+                    <PostCard
+                      key={post._id}
+                      post={{
+                        ...post,
+                        user: {
+                          _id: user._id,
+                          name: user.name,
+                          profileImage: user.profileImage,
+                        },
+                      }}
+                      onDelete={handleDeletePost}
+                      onEdit={handleOpenEdit}
+                      currentUserId={currentUserId}
+                    />
+                  ))
+                )}
+              </div>
             )}
-            <NavRight/>
+
+            {activeTab === "about" && (
+              <div className="about">
+                <p>{user.bio || `Biografia de ${user.name}`}</p>
+              </div>
+            )}
+
+            {activeTab === "friends" && (
+              <div className="friends">
+                <p>Lista de amigos (em breve)</p>
+              </div>
+            )}
+          </div>
         </div>
+
+        {modalOpen && (
+          <EditProfileModal
+            user={user}
+            onClose={() => setModalOpen(false)}
+            onUpdate={(updatedUser) => setUser(updatedUser)}
+          />
+        )}
+
+        {editingPost && (
+          <EditPostModal
+            post={editingPost}
+            onClose={() => setEditingPost(null)}
+            onSave={handleSaveEdit}
+          />
+        )}
+
+        <NavRight />
+      </div>
     </>
   )
 }
-
-

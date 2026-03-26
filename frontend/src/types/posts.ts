@@ -24,7 +24,9 @@ export interface CreatePostProps{
 }
 
 export interface PostCardProps{
-  post: IPost
+  post: IPost,
+  onEdit: (postId: IPost) => void,
+  currentUserId: string
 }
 
 export type FeedCenterProps = {

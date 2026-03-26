@@ -38,6 +38,7 @@
     padding: 10px;
     border-radius: 8px;
     outline: none;
+    font-family: inherit;
 }
 
 .modal textarea {
