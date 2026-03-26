@@ -33,13 +33,21 @@ export type Step3Props = {
   password: string
 }
 
-
 export type LocationState ={
   tab?: String
 }
 
-export type Modal ={
-  user:any,
+export interface IUser {
+  _id: string
+  name: string
+  email: string
+  profileImage?: string
+  coverImage?: string
+  bio?: string
+}
+
+export type ModalProps ={
+  user:IUser,
   onClose: () => void,
   onUpdate: (user: any) => void
 }

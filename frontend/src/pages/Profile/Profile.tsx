@@ -104,6 +104,7 @@ export default function Profile(){
                 )}
               </div>
             </div>
+            
             {modalOpen && (
               <EditProfileModal 
                 user={user} 

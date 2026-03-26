@@ -32,7 +32,7 @@ router.get("/users/:id", async (req, res) => {
     const user = await User.findById(req.params.id)
 
     const posts = await Post
-      .find({ userId: req.params.id })
+      .find({ user: req.params.id })
       .sort({ createdAt: -1 })
 
     res.json({ user, posts })
@@ -47,7 +47,7 @@ router.get("/me", authMiddleware, async (req, res) => {
     const user = await User.findById(req.userId)
 
     const posts = await Post
-      .find({ userId: req.userId })
+      .find({ user: req.userId })
       .sort({ createdAt: -1 })
 
     res.json({ user, posts })

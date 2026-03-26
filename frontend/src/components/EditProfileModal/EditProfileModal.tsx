@@ -1,9 +1,9 @@
 import "./style.css"
 import { useState, type ChangeEvent } from "react";
-import type { Modal } from "../../types/types";
+import type { ModalProps } from "../../types/types";
 import api from "../../services/api";
 
-export default function EditProfileModal({user, onClose, onUpdate}:Modal){
+export default function EditProfileModal({user, onClose, onUpdate}:ModalProps){
     const [name, setName] = useState(user.name)
     const [bio, setBio] = useState(user.bio || "")
     const [profileImage, setProfileImage] = useState<File | null>(null)
@@ -39,30 +39,30 @@ export default function EditProfileModal({user, onClose, onUpdate}:Modal){
     }
 
     return(
-   <div className="modal-backdrop">
-      <div className="modal">
-        <h2>Editar Perfil</h2>
-        <label>
-          Nome:
-          <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
-        </label>
-        <label>
-          Biografia:
-          <textarea value={bio} onChange={(e) => setBio(e.target.value)} />
-        </label>
-        <label>
-          Foto de Perfil:
-          <input type="file" accept="image/png, image/jpeg" onChange={(e) => handleFileChange(e, setProfileImage)} />
-        </label>
-        <label>
-          Foto de Capa:
-          <input type="file" accept="image/png , image/jpeg" onChange={(e) => handleFileChange(e, setCoverImage)} />
-        </label>
-        <div className="modal-actions">
-          <button onClick={onClose} disabled={loading}>Cancelar</button>
-          <button onClick={handleSubmit} disabled={loading}>{loading ? "Salvando..." : "Salvar"}</button>
+    <div className="modal-backdrop">
+        <div className="modal">
+          <h2>Editar Perfil</h2>
+          <label>
+            Nome:
+            <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
+          </label>
+          <label>
+            Biografia:
+            <textarea value={bio} onChange={(e) => setBio(e.target.value)} />
+          </label>
+          <label>
+            Foto de Perfil:
+            <input type="file" accept="image/png, image/jpeg" onChange={(e) => handleFileChange(e, setProfileImage)} />
+          </label>
+          <label>
+            Foto de Capa:
+            <input type="file" accept="image/png , image/jpeg" onChange={(e) => handleFileChange(e, setCoverImage)} />
+          </label>
+          <div className="modal-actions">
+            <button onClick={onClose} disabled={loading}>Cancelar</button>
+            <button onClick={handleSubmit} disabled={loading}>{loading ? "Salvando..." : "Salvar"}</button>
+          </div>
         </div>
       </div>
-    </div>
     )
 }

@@ -7,6 +7,8 @@ import AuthLoader from "./AuthLoader";
 import ForgotPassword from "../pages/ResetPassword/ForgotPassword";
 import ResetPassword from "../pages/ResetPassword/ResetPassword";
 import Profile from "../pages/Profile/Profile";
+import FeedCenter from "../components/Feed/FeedCenter";
+import Feed from "../pages/Feed/Feed";
 
 export default function AppRoutes(){
     return(
@@ -17,7 +19,7 @@ export default function AppRoutes(){
                 <Route path="/register" element = {<Register/>} />
                 <Route path="/forgot-password" element={<ForgotPassword/>}/>
                 <Route path="/reset-password" element={<ResetPassword/>}/>
-                <Route path="/feed" element={<Home/>}/>
+                <Route path="/feed" element={<Feed/>}/>
                 <Route path="/profile" element={<Profile/>}/>
             </Routes>
         </BrowserRouter>

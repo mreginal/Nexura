@@ -1,11 +1,17 @@
 import "./style.css"
 import Nav from "../../components/Navs/NavLeft/Nav";
-import NavRight from "../../components/Navs/NavRight/NavRight";
+import NavRight from "../../components/Navs/NavRight/NavRight"
+import FeedCenter from "../../components/Feed/FeedCenter"
+import type { IPost } from "../../types/posts";
+
 export default function Feed(){
+  const handlePostCreated = (newPost: IPost) => {
+    console.log("Novo post criado:", newPost)
+  }
 return(
   <div className="container-feed">
       <Nav/>
-      <div className="subcontainer-feed"></div>
+      <FeedCenter onPostCreated={handlePostCreated}/>
       <NavRight/>
   </div>
 )
