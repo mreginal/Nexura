@@ -1,11 +1,9 @@
 .container-feed-center{
     margin-top: 40px;
-    margin-left: 220px;
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
-    gap: 50px;
 }
 
 .subcontainer-new-post button{
@@ -22,6 +20,7 @@
     font-size: 25px;
     color: var(--medium-grey);
     cursor: pointer;
+    margin-bottom: 30px;
 }
 
 .subcontainer-new-post img{
@@ -37,3 +36,6 @@
     font-size: 16px;
 }
 
+::-webkit-scrollbar{
+    background: none;
+}

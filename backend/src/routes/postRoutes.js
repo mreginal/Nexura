@@ -1,5 +1,7 @@
 import express from "express"
 import Post from "../models/Post.js"
+import { deletePost } from "../controllers/postController.js"
+import { authMiddleware } from "../middlewares/authMiddleware.js"
 
 const router = express.Router()
 
@@ -32,5 +34,7 @@ router.post("/", async (req,res)=>{
         res.status(500).json({message: "Erro ao criar postagem: ", error})
     }
 })
+
+router.delete("/:id", authMiddleware, deletePost)
 
 export default router

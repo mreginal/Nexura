@@ -1,4 +1,6 @@
 .nav-right{
+    position: fixed;
+    right: 0;
     height: 100vh;
     width: 220px;
     display: flex;

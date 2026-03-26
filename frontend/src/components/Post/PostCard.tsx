@@ -1,17 +1,30 @@
-import { FaBookmark, FaHeart, FaShare } from "react-icons/fa"
+import { FaBookmark, FaHeart, FaShare, FaTrash } from "react-icons/fa"
 import type { PostCardProps } from "../../types/posts"
 import { getImageUrl } from "../../utils/getImageUrl"
 import { TbMessageCircleFilled } from "react-icons/tb"
 
-export default function PostCard({ post }: PostCardProps) {
+export default function PostCard({ post, onDelete, currentUserId }: PostCardProps) {
+  const isOwner = post.user._id === currentUserId
+
   return (
     <div className="post">
       <div className="post-header">
-        <img src={getImageUrl(post.user.profileImage || "")} alt={post.user.name} className="post-user-image"/>
-        <div>
-          <strong>{post.user.name}</strong>
-          <p>{new Date(post.createdAt).toLocaleString()}</p>
+        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <img
+            src={getImageUrl(post.user.profileImage || "")}
+            alt={post.user.name}
+            className="post-user-image"
+          />
+          <div>
+            <strong>{post.user.name}</strong>
+            <p>{new Date(post.createdAt).toLocaleString()}</p>
+          </div>
         </div>
+
+        {isOwner && (
+          <button onClick={() => onDelete(post._id)} id="btn-delete-post" title="Apagar post"> <FaTrash /> </button>
+        )}
+
       </div>
 
       <p className="post-content">{post.content}</p>
@@ -26,12 +39,12 @@ export default function PostCard({ post }: PostCardProps) {
 
       <div className="post-actions">
         <div id="post-actions-right">
-          <span> <FaHeart/> {post.likes}</span>
-          <span> <TbMessageCircleFilled/> {post.commentsCount}</span>
-          <span> <FaShare/> {post.shares}</span>
+          <span> <FaHeart /> {post.likes}</span>
+          <span> <TbMessageCircleFilled /> {post.commentsCount}</span>
+          <span> <FaShare /> {post.shares}</span>
         </div>
         <div>
-          <span> <FaBookmark/> {post.saves}</span>
+          <span> <FaBookmark /> {post.saves}</span>
         </div>
       </div>
     </div>
