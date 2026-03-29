@@ -1,6 +1,6 @@
 import { useState } from "react"
-import type { IPost } from "../../types/posts"
-import "./style.css"
+import type { IPost } from "../../../types/types"
+import "../style.css"
 import { FaTrash } from "react-icons/fa"
 
 interface EditPostModalProps {
@@ -10,12 +10,7 @@ interface EditPostModalProps {
   onDelete: (postId: string) => void
 }
 
-export default function EditPostModal({
-  post,
-  onClose,
-  onSave,
-  onDelete
-}: EditPostModalProps) {
+export default function EditPostModal({post, onClose, onSave, onDelete}: EditPostModalProps) {
   const [content, setContent] = useState(post.content)
 
   function handleSubmit(e: React.FormEvent) {

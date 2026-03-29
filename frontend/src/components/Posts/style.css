@@ -1,7 +1,10 @@
-.modal-overlay {
+.modal-overlay, .comments-modal-overlay {
     position: fixed;
+    right: 0;
+    top: 0;
     width: 100%;
     height: 100%;
+    padding: 0px;
     background: rgba(0, 0, 0, 0.6);
     display: flex;
     justify-content: center;
@@ -9,7 +12,7 @@
     z-index: 999;
 }
 
-.modal {
+.modal, .comments-modal {
     width: 100%;
     max-width: 700px;
     background: var(--white-bg);
@@ -19,7 +22,7 @@
     animation: fadeInModal 0.2s ease;
 }
 
-.modal-header {
+.modal-header, .comments-modal-header {
     position: relative;
     display: flex;
     margin-bottom: 22px;
@@ -32,7 +35,7 @@
     margin: 0;
 }
 
-#close {
+.close {
     all: unset;
     position: absolute;
     right: 0;
@@ -45,7 +48,7 @@
     justify-items: end;
 }
 
-#close:hover {
+.close:hover {
     background: transparent;
     color: var(--purple-1);
 }
@@ -202,12 +205,12 @@
 }
 
 /*
--------------------
-  CURTIR POSTAGEM
--------------------
+-----------------------
+  CURTIDAS DA POSTAGEM
+-----------------------
 */
 
-.like-btn, .like-btn:hover {
+.like-btn, .like-btn:hover, .comment-btn{
   all: unset;
   display: flex;
   align-items: center;
@@ -217,7 +220,7 @@
   cursor: pointer;
 }
 
-.heart-icon {
+.heart-icon, .comment-icon {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -270,4 +273,29 @@
   100% {
     transform: translateY(0);
   }
+}
+
+/*
+--------------------------
+  COMENTÁRIOS DA POSTAGEM
+--------------------------
+*/
+
+.comment-btn:hover{
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background-color: transparent;
+  color: var(--purple-1);
+  cursor: pointer;
+}
+
+.comment-btn span, .comment-btn span:hover{
+  font-size: 16px;
+  color: var(--medium-grey);
+}
+
+.comment-btn.active {
+  color: var(--purple-1);
+  cursor:no-drop;
 }
