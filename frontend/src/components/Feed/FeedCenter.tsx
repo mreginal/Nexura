@@ -80,6 +80,16 @@ export default function FeedCenter({ onPostCreated }: FeedCenterProps) {
     }
   }
 
+  async function handleToggleLike(postId: string){
+    try {
+      const response = await api.patch(`/posts/${postId}/like`)
+      const updatedPost = response.data.post
+      setPosts((prevPosts)=>prevPosts.map((post )=>post._id === postId? updatedPost:post))
+    } catch (error) {
+      console.error(`Erro ao curtir post: ${error}`)
+    }
+  }
+
   if (loadingUser) return <div>Carregando usuário...</div>
   if (!user) return <div>Usuário não encontrado.</div>
 
@@ -107,6 +117,7 @@ export default function FeedCenter({ onPostCreated }: FeedCenterProps) {
               post={post}
               onEdit={handleOpenEdit}
               currentUserId={user._id}
+              onLike={handleToggleLike}
             />
           ))
         ) : (

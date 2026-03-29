@@ -9,7 +9,7 @@ export interface IPost{
     content: string,
     image?:string,
     createdAt: string,
-    likes: number,
+    likes: string[],
     commentsCount: number,
     shares: number,
     saves: number,
@@ -25,8 +25,9 @@ export interface CreatePostProps{
 
 export interface PostCardProps{
   post: IPost,
+  currentUserId: string,
   onEdit: (postId: IPost) => void,
-  currentUserId: string
+  onLike: (postId: string) => void
 }
 
 export type FeedCenterProps = {

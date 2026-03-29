@@ -1,9 +1,10 @@
-import mongoose from "mongoose"
+import mongoose, { mongo } from "mongoose"
 
 const postSchema = new mongoose.Schema({
-    userId:{
+    user:{
         type: mongoose.Schema.Types.ObjectId,
-        ref:"User"
+        ref:"User",
+        required: true
     },
     content:{
         type: String,
@@ -14,10 +15,11 @@ const postSchema = new mongoose.Schema({
         type: String,
         default: ""
     },
-    likes:{
-        type: Number,
-        default: 0
-    },
+    likes:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        default: []
+    }],
     commentsCount:{
         type: Number,
         default: 0
@@ -29,12 +31,7 @@ const postSchema = new mongoose.Schema({
     saves:{
         type: Number,
         default: 0
-    },
-    user:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        required: true
-    },
+    }
 },{timestamps: true})
 
 export default mongoose.model("Post", postSchema)

@@ -1,10 +1,22 @@
-import { FaBookmark, FaHeart, FaShare, FaTrash, FaEdit } from "react-icons/fa"
+import { FaBookmark, FaHeart, FaShare, FaEdit, FaRegHeart } from "react-icons/fa"
 import type { PostCardProps } from "../../types/posts"
 import { getImageUrl } from "../../utils/getImageUrl"
 import { TbMessageCircleFilled } from "react-icons/tb"
+import { useState } from "react"
 
-export default function PostCard({ post, onEdit, currentUserId }: PostCardProps) {
+export default function PostCard({ post, currentUserId, onEdit, onLike }: PostCardProps) {
   const isOwner = post.user._id === currentUserId
+  const likedByUser = post.likes?.includes(currentUserId) ?? false
+  const [isAnimating, setIsAnimating] = useState(false)
+
+  function handleLikeClick(){
+    setIsAnimating(true)
+    onLike(post._id)
+
+    setTimeout(() => {
+      setIsAnimating(false)
+    }, 300);
+  }
 
   return (
     <div className="post">
@@ -43,7 +55,14 @@ export default function PostCard({ post, onEdit, currentUserId }: PostCardProps)
 
       <div className="post-actions">
         <div id="post-actions-right">
-          <span><FaHeart /> {post.likes}</span>
+          <button className="like-btn" onClick={handleLikeClick}>
+            <span className={`heart-icon ${likedByUser ? "liked" : ""} ${isAnimating ? "animate-like" : ""}`}>
+              {likedByUser ? <FaHeart /> : <FaRegHeart />}
+            </span>
+            <span className={`like-count ${isAnimating ? "count-bounce" : ""}`}>
+              {post.likes?.length ?? 0}
+            </span>
+        </button>
           <span><TbMessageCircleFilled /> {post.commentsCount}</span>
           <span><FaShare /> {post.shares}</span>
         </div>

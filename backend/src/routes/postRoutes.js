@@ -1,6 +1,6 @@
 import express from "express"
 import Post from "../models/Post.js"
-import { deletePost, updatePost } from "../controllers/postController.js"
+import { deletePost, toggleLikePost, updatePost } from "../controllers/postController.js"
 import { authMiddleware } from "../middlewares/authMiddleware.js"
 
 const router = express.Router()
@@ -37,5 +37,6 @@ router.post("/", async (req,res)=>{
 
 router.put("/:id", authMiddleware, updatePost)
 router.delete("/:id", authMiddleware, deletePost)
+router.patch("/:id/like", authMiddleware, toggleLikePost)
 
 export default router

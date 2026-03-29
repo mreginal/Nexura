@@ -48,3 +48,32 @@ export const updatePost = async (req,res) =>{
     console.error(error)
   }
 }
+
+export const toggleLikePost = async(req,res)=>{
+  try {
+    const {id} = req.params
+    const userId = req.userId
+
+    const post = await Post.findById(id)
+    if(!post){
+      return res.status(404).json({message:"Post não encontrado!"})
+    }
+
+    const alreadyLiked = post.likes.some((likeUserId) => likeUserId.toString() === userId)
+    if(alreadyLiked){
+      post.likes = post.likes.filter((likeUserId) => likeUserId.toString() !== userId)
+    }else{
+      post.likes.push(userId)
+    }
+
+    await post.save()
+
+    const updatedPost = await Post.findById(id).populate(
+      "user", "name profileImage"
+    )
+
+    return res.status(200).json({message: alreadyLiked? "Like removido" : "Post curtido", post: updatedPost})
+  } catch (error) {
+    return res.status(500).json({message: `Erro no servidor ao curtir postagem: ${error}`})
+  }
+}
