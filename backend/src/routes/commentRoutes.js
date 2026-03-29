@@ -6,6 +6,6 @@ const router = express.Router()
 
 router.get("/:postId/comments", authMiddleware, getCommentsByPost)
 router.post("/:postId/comments", authMiddleware, createComment)
-router.delete("/:postId/commentId", authMiddleware, deleteComment)
+router.delete("/comments/:commentId", authMiddleware, deleteComment)
 
 export default router

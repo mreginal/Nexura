@@ -8,6 +8,9 @@ import { useComments } from "../../hooks/useComments"
 import { usePosts } from "../../hooks/usePosts"
 import PostCard from "../../components/Posts/Post/PostCard"
 import { useUser } from "../../hooks/useUser"
+import CommentsModal from "../../components/Posts/Comments/CommentsModal"
+import { getImageUrl } from "../../utils/getImageUrl"
+import { FaRegSmile, FaTrash } from "react-icons/fa"
 
 export default function PostCommentsPage() {
   const { postId } = useParams()
@@ -15,10 +18,10 @@ export default function PostCommentsPage() {
   const currentUserId = user?._id || ""
 
   const [post, setPost] = useState<IPost | null>(null)
-  const [newComment, setNewComment] = useState("")
 
   const { getPostById, loadingPost, toggleLikePost, updatePost } = usePosts()
-  const { comments, loadingComments, createComment, deleteComment} = useComments(postId)
+  const { comments, loadingComments, deleteComment} = useComments(postId)
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   useEffect(() => {
     async function loadPost() {
@@ -30,13 +33,6 @@ export default function PostCommentsPage() {
 
     loadPost()
   }, [postId])
-
-  async function handleCreateComment() {
-    if (!newComment.trim()) return
-
-    await createComment(newComment)
-    setNewComment("")
-  }
 
   async function handleLike(postId: string) {
     try {
@@ -78,7 +74,29 @@ export default function PostCommentsPage() {
   if (!post) {
     return <p className="comments-page-loading">Post não encontrado.</p>
   }
+  
+  async function handleDeleteComment(commentId:string) {
+    const confirmDelete = window.confirm("Quer mesmo apagar este comentário?")
+    if(!confirmDelete) return
+    
+    try {
+      await deleteComment(commentId)
 
+      setPost((prev)=>{
+        if (!prev) return prev
+        return{
+          ...prev,
+          commentsCount: (prev.commentsCount || 1) - 1
+        }
+
+        window.location.reload()
+
+      })
+    } catch (error) {
+      console.error("Erro ao apagar comentário: ", error)
+    }
+  }
+  
   return (
     <div className="container-comments">
       <Nav />
@@ -94,41 +112,42 @@ export default function PostCommentsPage() {
           />
 
           <div className="new-comment">
-          <textarea
-            placeholder="Escreva um comentário..."
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey && newComment.trim()) {
-                e.preventDefault()
-                handleCreateComment()
-              }
-            }}
-            rows={2}
-          />
-        </div>
+            <button className="new-comment-btn" onClick={() => setIsModalOpen(true)}>
+              <div className="comment-left">
+                <img src={getImageUrl(post.user.profileImage || "")} alt="Foto do Perfil" />
+                <div className="add-comment">
+                  <p>Adicionar comentário</p>
+                  <label>Deixe uma mensagem nesta postagem.</label>
+                </div>
+              </div>
+              <FaRegSmile id="smile"/>
+            </button>
+          </div>
 
           <div className="comments-list">
             {comments.length > 0 ? (
               comments.map((comment) => (
                 <div key={comment._id} className="comment-card">
                   <img
-                    src={comment.user.profileImage || ""}
+                    src={getImageUrl(comment.user.profileImage || "")}
                     alt={comment.user.name}
                     className="comment-profile"
                   />
 
                   <div className="comment-content">
-                    <strong>{comment.user.name}</strong>
+                    <div id="username-date-comment">
+                      <strong>{comment.user.name}</strong>
+                      <span>{comment.createdAt}</span>
+                    </div>
                     <p>{comment.content}</p>
                   </div>
 
                   {comment.user._id === currentUserId && (
                     <button
                       className="delete-comment-btn"
-                      onClick={() => deleteComment(comment._id)}
+                      onClick={() => handleDeleteComment(comment._id)}
                     >
-                      Apagar
+                      <FaTrash/>
                     </button>
                   )}
                 </div>
@@ -138,6 +157,26 @@ export default function PostCommentsPage() {
             )}
           </div>
         </div>
+
+        {post &&(
+          <CommentsModal 
+          post={post}
+          currentUserId={currentUserId}
+          isOpen={isModalOpen}
+          onClose={()=>setIsModalOpen(false)}
+          onCommentCountChange={(delta) =>{
+            setPost((prev)=>{
+              if(!prev) return prev
+              return{
+                ...prev,
+                commentsCount: (prev.commentsCount || 0) + delta
+              }
+            })
+          }}
+          />
+        )
+
+        }
       </div>
 
       <NavRight />

@@ -113,6 +113,7 @@ export interface IComment {
   updatedAt: string
 }
 
+
 /* 
 =============
     MODAIS
@@ -124,6 +125,16 @@ export interface ModalProps {
   onClose: () => void
   onUpdate: (updatedUser: IUser) => void
 }
+
+
+export interface CommentsModalProps {
+  post: IPost
+  currentUserId: string
+  isOpen: boolean
+  onClose: () => void
+  onCommentCountChange?: (delta: number) => void
+}
+
 
 /* 
 ==========================
@@ -150,10 +161,4 @@ export interface PostCardProps {
   onDelete?: (postId: string) => void
   onCommentCountUpdate?: (postId: string, delta: number) => void
   isCommentsPage?: boolean
-}
-
-export interface CommentsSectionProps {
-  postId: string
-  currentUserId: string
-  onCommentCountChange?: (delta: number) => void
 }

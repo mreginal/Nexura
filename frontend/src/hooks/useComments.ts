@@ -35,9 +35,9 @@ export function useComments(postId?: string) {
     }
   }
 
-  async function deleteComment(commentId: string) {
+  async function deleteComment( commentId: string) {
     try {
-      await api.delete(`/posts/comment/${commentId}`)
+      await api.delete(`/posts/comments/${commentId}`)
       setComments((prev) => prev.filter((comment) => comment._id !== commentId))
     } catch (error) {
       console.error("Erro ao apagar comentário:", error)

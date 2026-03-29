@@ -5,8 +5,8 @@ import type { PostCardProps } from "../../../types/types"
 import "../style.css"
 import { getImageUrl } from "../../../utils/getImageUrl"
 import { useNavigate } from "react-router-dom"
-import { HiMiniChatBubbleOvalLeft } from "react-icons/hi2"
 import EditPostModal from "./EditPostModal"
+import { IoChatbubbleOutline, IoChatbubbleSharp } from "react-icons/io5"
 
 function PostCard({
   post,
@@ -75,22 +75,23 @@ function PostCard({
       )}
 
       <div className="post-actions">
-        <button className="like-btn" onClick={handleLikeClick} disabled={!onLike}>
-          <span className={`heart-icon ${likedByUser ? "liked" : ""} ${isAnimating ? "animate-like" : ""}`}>
-            {likedByUser ? <FaHeart /> : <FaRegHeart />}
-          </span>
-          <span className={`like-count ${isAnimating ? "count-bounce" : ""}`}>{post.likes?.length ?? 0}</span>
-        </button>
-
-        <button
-          className={`comment-btn ${isCommentsPage ? "active" : ""}`}
-          onClick={() => navigate(`/posts/${post._id}/comments`)}
-        >
-          <HiMiniChatBubbleOvalLeft className="comment-icon" />
-          <span>{post.commentsCount}</span>
-        </button>
-
-        <button>{post.shares}</button>
+        <div id="post-actions-left">
+          <button className="like-btn" onClick={handleLikeClick} disabled={!onLike}>
+            <span className={`heart-icon ${likedByUser ? "liked" : ""} ${isAnimating ? "animate-like" : ""}`}>
+              {likedByUser ? <FaHeart /> : <FaRegHeart />}
+            </span>
+            <span className={`like-count ${isAnimating ? "count-bounce" : ""}`}>{post.likes?.length ?? 0}</span>
+          </button>
+          <button
+            className={`comment-btn ${isCommentsPage ? "active" : ""}`}
+            onClick={() => navigate(`/posts/${post._id}/comments`)}
+          >
+            {isCommentsPage? <IoChatbubbleSharp/> : <IoChatbubbleOutline/>}
+            <span>{post.commentsCount}</span>
+          </button>
+          <button>{post.shares}</button>
+        </div>
+        
         <button>{post.saves}</button>
       </div>
 

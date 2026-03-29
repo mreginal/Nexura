@@ -167,9 +167,9 @@
   font-size: 18px;
 }
 
-#post-actions-right{
+#post-actions-left{
   display: flex;
-  gap: 30px;
+  gap: 50px;
 }
 
 /*
@@ -298,4 +298,19 @@
 .comment-btn.active {
   color: var(--purple-1);
   cursor:no-drop;
+}
+
+.comments-modal-text{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.comments-modal-text textarea{
+  width: 100%;
+  min-height: 150px;
+  font-family: inherit;
+  padding: 20px;
+  border: 2px solid var(--medium-grey);
+  border-radius: 15px;
 }

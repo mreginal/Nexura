@@ -7,15 +7,10 @@
   align-items: center;
 }
 
-.comments-page-header h2 {
-  font-size: 255px;
-  margin: 0;
-}
-
 .comments-page-content {
   padding: 20px;
   padding-bottom: 120px;
-  max-width: 700px;
+  max-width: 750px;
   width: 100%;
   margin: 0 auto;
 }
@@ -28,50 +23,19 @@
   object-fit: cover;
 }
 
-.post-content {
-  margin: 12px 0;
-  font-size: 15px;
-  line-height: 1.5;
-}
-
-.post-image {
-  width: 100%;
-  border-radius: 12px;
-  margin-top: 10px;
-  object-fit: cover;
-}
-
-.comments-list{
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.comment-card {
-  background: white;
-  border-radius: 14px;
-  padding: 14px;
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
-}
-
 .comment-content {
   flex: 1;
 }
 
-.comment-content p {
-  margin-top: 4px;
-  margin-bottom: 0;
-}
-
-.delete-comment-btn {
+.delete-comment-btn, .delete-comment-btn:hover {
+  all: unset;
+  padding-right: 10px;
   background: transparent;
   border: none;
-  color: crimson;
+  color: var(--medium-grey);
   cursor: pointer;
-  font-size: 14px;
+  font-size: 20px;
+  justify-self: flex-end;
 }
 
 .no-comments,
@@ -79,4 +43,66 @@
   text-align: center;
   margin-top: 30px;
   color: #666;
+}
+
+.new-comment-btn, .new-comment-btn:hover, .comment-card{
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--white-bg);
+  box-shadow: 0px 2px 18px 0px var(--medium-grey);
+  border-radius: 10px;
+  padding: 20px;
+  color: black;
+  margin-bottom: 30px;
+  gap: 15px;
+}
+
+.new-comment-btn{
+  width: 100%;
+}
+
+.new-comment-btn:hover{
+  background: var(--light-grey);
+}
+
+
+.new-comment-btn img{
+  height: 50px;
+  border-radius: 50%;
+}
+
+.comment-left{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.add-comment{
+  text-align: start;
+  line-height: 25px;
+}
+
+.add-comment label{
+  font-size: 14px;
+  text-decoration: underline;
+  font-weight: normal;
+}
+
+#smile{
+  font-size: 25px;
+  color: var(--medium-grey);
+  padding-right: 10px;
+}
+
+#username-date-comment{
+  display: flex;
+  flex-direction: column;
+}
+
+#username-date-comment span{
+  font-size: 10px;
+  margin-bottom: 10px;
+  color: var(--dark-grey);
 }
