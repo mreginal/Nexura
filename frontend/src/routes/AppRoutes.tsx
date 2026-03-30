@@ -20,6 +20,7 @@ export default function AppRoutes(){
                 <Route path="/reset-password" element={<ResetPassword/>}/>
                 <Route path="/feed" element={<Feed/>}/>
                 <Route path="/profile" element={<Profile/>}/>
+                <Route path="/profile/:userId" element={<Profile/>}/>
                 <Route path="/posts/:postId/comments" element={<PostCommentsPage/>}/>
             </Routes>
         </BrowserRouter>

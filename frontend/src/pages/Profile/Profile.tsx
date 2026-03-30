@@ -1,10 +1,9 @@
 import "./style.css"
 import Nav from "../../components/Navs/NavLeft/Nav"
 import NavRight from "../../components/Navs/NavRight/NavRight"
-import { useEffect, useMemo, useState } from "react"
-import { useLocation } from "react-router-dom"
-import type { LocationState } from "../../types/types"
-import type { IPost } from "../../types/types"
+import { useMemo, useState } from "react"
+import { useLocation, useParams } from "react-router-dom"
+import type { LocationState, IPost } from "../../types/types"
 import EditProfileModal from "../../components/EditProfileModal/EditProfileModal"
 import { FaEdit } from "react-icons/fa"
 import { getImageUrl } from "../../utils/getImageUrl"
@@ -15,11 +14,17 @@ import { usePosts } from "../../hooks/usePosts"
 import SavedPosts from "../Post/SavedPosts"
 
 export default function Profile() {
-  const { user, loadingUser, loadUser } = useUser()
+  const { userId } = useParams()
+
+  // Usuário que foi visitado
+  const { user: profileUser, loadingUser, loadUser } = useUser(userId)
+
+  // Usuário logado
+  const { user: loggedUser, loadingUser: loadingLoggedUser } = useUser()
+
   const location = useLocation()
   const state = location.state as LocationState | undefined
   const defaultTab = state?.tab || "posts"
-  const [post, setPost] = useState<IPost | null>(null)
   const [activeTab, setActiveTab] = useState(defaultTab)
   const [modalOpen, setModalOpen] = useState(false)
   const [editingPost, setEditingPost] = useState<IPost | null>(null)
@@ -27,28 +32,27 @@ export default function Profile() {
   const {
     posts,
     loadingPosts,
-    loadPosts,
     deletePost,
     updatePost,
     toggleLikePost,
     toggleSavePost
   } = usePosts()
 
-  useEffect(() => {
-    loadUser()
-    loadPosts()
-  }, [])
-
   const userPosts = useMemo(() => {
-    console.log(post)
-    if (!user) return []
-    return posts.filter((post) => post.user._id === user._id)
-  }, [posts, user])
+    if (!profileUser) return []
+    return posts.filter((post) => post.user._id === profileUser._id)
+  }, [posts, profileUser])
 
-  if (loadingUser || loadingPosts) return <p>Carregando...</p>
-  if (!user) return <p>Erro ao carregar perfil</p>
+  if (loadingUser || loadingLoggedUser || loadingPosts) {
+    return <p>Carregando...</p>
+  }
 
-  const currentUserId = user._id
+  if (!profileUser || !loggedUser) {
+    return <p>Erro ao carregar perfil</p>
+  }
+
+  const currentUserId = loggedUser._id
+  const isOwnProfile = loggedUser._id === profileUser._id
 
   async function handleDeletePost(postId: string) {
     const confirmDelete = window.confirm("Tem certeza que deseja apagar este post?")
@@ -61,12 +65,15 @@ export default function Profile() {
     }
   }
 
-    async function handleEdit(postId: string, newContent: string) {
+  async function handleToggleLike(postId: string) {
+    await toggleLikePost(postId)
+  }
+
+  async function handleEdit(postId: string, newContent: string) {
     try {
       const updatedPost = await updatePost(postId, newContent)
 
       if (updatedPost) {
-        setPost(updatedPost)
         setEditingPost(null)
       }
     } catch (error) {
@@ -74,21 +81,14 @@ export default function Profile() {
     }
   }
 
-  async function handleToggleLike(postId: string) {
-    await toggleLikePost(postId)
-  }
-
   async function handleSave(postId: string) {
-  try {
-    const updatedPost = await toggleSavePost(postId)
-
-    if (updatedPost) {
-      setPost(updatedPost)
+    try {
+      await toggleSavePost(postId)
+    } catch (error) {
+      console.error("Erro ao salvar/desalvar post:", error)
     }
-  } catch (error) {
-    console.error("Erro ao salvar/desalvar post:", error)
   }
-}
+
   return (
     <div className="container-profile">
       <Nav />
@@ -96,29 +96,33 @@ export default function Profile() {
       <div className="subcontainer-profile">
         <div
           className="cover-profile"
-          style={{ backgroundImage: `url(${getImageUrl(user.coverImage)})` }}
+          style={{
+            backgroundImage: `url(${getImageUrl(profileUser.coverImage)})`
+          }}
         ></div>
 
         <div className="profile-infos">
           <div className="infos">
             <img
-              src={getImageUrl(user.profileImage)}
+              src={getImageUrl(profileUser.profileImage)}
               alt="Foto de Perfil"
               className="avatar"
             />
-            <h2>{user.name}</h2>
+            <h2>{profileUser.name}</h2>
           </div>
 
           <div className="infos">
-            <p>{user.bio || `Biografia de ${user.name}`}</p>
+            <p>{profileUser.bio || `Biografia de ${profileUser.name}`}</p>
             <div className="progress-bar"></div>
 
-            <button
-              id="button-edit-profile"
-              onClick={() => setModalOpen(true)}
-            >
-              <FaEdit />
-            </button>
+            {isOwnProfile && (
+              <button
+                id="button-edit-profile"
+                onClick={() => setModalOpen(true)}
+              >
+                <FaEdit />
+              </button>
+            )}
           </div>
         </div>
 
@@ -132,21 +136,26 @@ export default function Profile() {
 
           <button
             className={activeTab === "about" ? "tab active" : "tab"}
-            onClick={() => setActiveTab("about")}>
+            onClick={() => setActiveTab("about")}
+          >
             Sobre
           </button>
 
           <button
             className={activeTab === "friends" ? "tab active" : "tab"}
-            onClick={() => setActiveTab("friends")}>
+            onClick={() => setActiveTab("friends")}
+          >
             Amigos
           </button>
 
-          <button
-            className={activeTab === "saves" ? "tab active" : "tab"}
-            onClick={() => setActiveTab("saves")}>
-            Salvos
-          </button>
+          {isOwnProfile && (
+            <button
+              className={activeTab === "saves" ? "tab active" : "tab"}
+              onClick={() => setActiveTab("saves")}
+            >
+              Salvos
+            </button>
+          )}
         </div>
 
         <div className="tab-content">
@@ -172,7 +181,7 @@ export default function Profile() {
 
           {activeTab === "about" && (
             <div className="about">
-              <p>{user.bio || `Biografia de ${user.name}`}</p>
+              <p>{profileUser.bio || `Biografia de ${profileUser.name}`}</p>
             </div>
           )}
 
@@ -182,17 +191,17 @@ export default function Profile() {
             </div>
           )}
 
-          {activeTab === "saves" && (
+          {activeTab === "saves" && isOwnProfile && (
             <div className="saves">
-              <SavedPosts currentUserId={currentUserId}/>
+              <SavedPosts currentUserId={currentUserId} />
             </div>
           )}
         </div>
       </div>
 
-      {modalOpen && (
+      {modalOpen && isOwnProfile && (
         <EditProfileModal
-          user={user}
+          user={profileUser}
           onClose={() => setModalOpen(false)}
           onUpdate={loadUser}
         />

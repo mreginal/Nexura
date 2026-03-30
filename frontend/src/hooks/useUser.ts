@@ -2,14 +2,14 @@ import { useEffect, useState } from "react"
 import api from "../services/api"
 import type { IUser } from "../types/types"
 
-export function useUser() {
+export function useUser(userId?: string) {
   const [user, setUser] = useState<IUser | null>(null)
   const [loadingUser, setLoadingUser] = useState(true)
 
   async function loadUser() {
     try {
       setLoadingUser(true)
-      const response = await api.get("/me")
+      const response = userId ? await api.get(`users/${userId}`) : await api.get("/me")
       setUser(response.data.user)
     } catch (error) {
       console.error("Erro ao buscar usuário:", error)
@@ -21,7 +21,7 @@ export function useUser() {
 
   useEffect(() => {
     loadUser()
-  }, [])
+  }, [userId])
 
   return {
     user,

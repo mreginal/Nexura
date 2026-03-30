@@ -4,7 +4,7 @@ import { FaHeart, FaRegHeart, FaEdit, FaShare, FaBookmark } from "react-icons/fa
 import type { PostCardProps } from "../../../types/types"
 import "../style.css"
 import { getImageUrl } from "../../../utils/getImageUrl"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import EditPostModal from "./EditPostModal"
 import { IoChatbubbleOutline, IoChatbubbleSharp } from "react-icons/io5"
 
@@ -48,13 +48,17 @@ function PostCard({
     <div className="post">
       <div className="post-header">
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <img
-            src={getImageUrl(post.user.profileImage || "")}
-            alt={post.user.name}
-            className="post-user-image"
-          />
+          <Link to={`/profile/${post.user._id}`}>
+            <img
+              src={getImageUrl(post.user.profileImage)}
+              alt={post.user.name}
+              className="post-user-image"
+            />
+          </Link>
           <div>
-            <strong>{post.user.name}</strong>
+            <Link to={`/profile/${post.user._id}`} className="post-username">
+              {post.user.name}
+            </Link>
             <p>{new Date(post.createdAt).toLocaleString()}</p>
           </div>
         </div>

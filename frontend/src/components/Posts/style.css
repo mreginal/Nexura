@@ -165,6 +165,12 @@
   font-size: 12px;
 }
 
+.post-username{
+  text-decoration: none;
+  font-weight: bold;
+  color: var(--black);
+}
+
 .post-actions {
   display: flex;
   justify-content: space-between;
