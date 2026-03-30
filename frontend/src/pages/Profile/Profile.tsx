@@ -12,6 +12,7 @@ import PostCard from "../../components/Posts/Post/PostCard"
 import EditPostModal from "../../components/Posts/Post/EditPostModal"
 import { useUser } from "../../hooks/useUser"
 import { usePosts } from "../../hooks/usePosts"
+import SavedPosts from "../Post/SavedPosts"
 
 export default function Profile() {
   const { user, loadingUser, loadUser } = useUser()
@@ -29,7 +30,8 @@ export default function Profile() {
     loadPosts,
     deletePost,
     updatePost,
-    toggleLikePost
+    toggleLikePost,
+    toggleSavePost
   } = usePosts()
 
   useEffect(() => {
@@ -76,6 +78,17 @@ export default function Profile() {
     await toggleLikePost(postId)
   }
 
+  async function handleSave(postId: string) {
+  try {
+    const updatedPost = await toggleSavePost(postId)
+
+    if (updatedPost) {
+      setPost(updatedPost)
+    }
+  } catch (error) {
+    console.error("Erro ao salvar/desalvar post:", error)
+  }
+}
   return (
     <div className="container-profile">
       <Nav />
@@ -119,16 +132,20 @@ export default function Profile() {
 
           <button
             className={activeTab === "about" ? "tab active" : "tab"}
-            onClick={() => setActiveTab("about")}
-          >
+            onClick={() => setActiveTab("about")}>
             Sobre
           </button>
 
           <button
             className={activeTab === "friends" ? "tab active" : "tab"}
-            onClick={() => setActiveTab("friends")}
-          >
+            onClick={() => setActiveTab("friends")}>
             Amigos
+          </button>
+
+          <button
+            className={activeTab === "saves" ? "tab active" : "tab"}
+            onClick={() => setActiveTab("saves")}>
+            Salvos
           </button>
         </div>
 
@@ -144,6 +161,7 @@ export default function Profile() {
                     post={post}
                     onDelete={handleDeletePost}
                     onEdit={handleEdit}
+                    onSave={handleSave}
                     onLike={handleToggleLike}
                     currentUserId={currentUserId}
                   />
@@ -161,6 +179,12 @@ export default function Profile() {
           {activeTab === "friends" && (
             <div className="friends">
               <p>Lista de amigos (em breve)</p>
+            </div>
+          )}
+
+          {activeTab === "saves" && (
+            <div className="saves">
+              <SavedPosts currentUserId={currentUserId}/>
             </div>
           )}
         </div>

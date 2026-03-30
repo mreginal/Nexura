@@ -21,26 +21,36 @@ export function useComments(postId?: string) {
   }
 
   async function createComment(content: string) {
-    if (!postId || !content.trim()) return
+    if (!postId || !content.trim()) return null
 
     try {
       const response = await api.post(`/posts/${postId}/comments`, {
         content
       })
 
-      setComments((prev) => [response.data.comment, ...prev])
-      return response.data.comment
+      const newComment = response.data.comment
+
+      setComments((prev) => [newComment, ...prev])
+
+      return newComment
     } catch (error) {
       console.error("Erro ao comentar:", error)
+      return null
     }
   }
 
-  async function deleteComment( commentId: string) {
+  async function deleteComment(commentId: string) {
     try {
       await api.delete(`/posts/comments/${commentId}`)
-      setComments((prev) => prev.filter((comment) => comment._id !== commentId))
+
+      setComments((prev) =>
+        prev.filter((comment) => comment._id !== commentId)
+      )
+
+      return true
     } catch (error) {
       console.error("Erro ao apagar comentário:", error)
+      return false
     }
   }
 

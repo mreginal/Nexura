@@ -21,6 +21,7 @@ export default function FeedCenter({ onPostCreated }: FeedCenterProps) {
     deletePost,
     updatePost,
     toggleLikePost,
+    toggleSavePost,
     updateCommentCount,
     addNewPost
   } = usePosts()
@@ -81,6 +82,7 @@ export default function FeedCenter({ onPostCreated }: FeedCenterProps) {
               onDelete={handleDeletePost}
               currentUserId={user._id}
               onLike={toggleLikePost}
+              onSave={toggleSavePost}
               onCommentCountUpdate={updateCommentCount}
             />
           ))

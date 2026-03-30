@@ -19,7 +19,7 @@ export default function PostCommentsPage() {
 
   const [post, setPost] = useState<IPost | null>(null)
 
-  const { getPostById, loadingPost, toggleLikePost, updatePost } = usePosts()
+  const { getPostById, loadingPost, toggleLikePost, toggleSavePost, updatePost } = usePosts()
   const { comments, loadingComments, deleteComment} = useComments(postId)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -36,20 +36,11 @@ export default function PostCommentsPage() {
 
   async function handleLike(postId: string) {
     try {
-      await toggleLikePost(postId)
+      const updatedPost = await toggleLikePost(postId)
 
-      setPost((prev) => {
-        if (!prev) return prev
-
-        const alreadyLiked = prev.likes.includes(currentUserId)
-
-        return {
-          ...prev,
-          likes: alreadyLiked
-            ? prev.likes.filter((id) => id !== currentUserId)
-            : [...prev.likes, currentUserId]
-        }
-      })
+      if (updatedPost) {
+        setPost(updatedPost)
+      }
     } catch (error) {
       console.error("Erro ao curtir/descurtir post:", error)
     }
@@ -75,25 +66,34 @@ export default function PostCommentsPage() {
     return <p className="comments-page-loading">Post não encontrado.</p>
   }
   
-  async function handleDeleteComment(commentId:string) {
-    const confirmDelete = window.confirm("Quer mesmo apagar este comentário?")
-    if(!confirmDelete) return
-    
+  async function handleDeleteComment(commentId: string) {
+  const confirmDelete = window.confirm("Quer mesmo apagar este comentário?")
+  if (!confirmDelete) return
+  
+  try {
+    await deleteComment(commentId)
+
+    setPost((prev) => {
+      if (!prev) return prev
+      return {
+        ...prev,
+        commentsCount: Math.max(0, (prev.commentsCount || 0) - 1)
+      }
+    })
+  } catch (error) {
+    console.error("Erro ao apagar comentário: ", error)
+  }
+}
+
+  async function handleSave(postId: string) {
     try {
-      await deleteComment(commentId)
+      const updatedPost = await toggleSavePost(postId)
 
-      setPost((prev)=>{
-        if (!prev) return prev
-        return{
-          ...prev,
-          commentsCount: (prev.commentsCount || 1) - 1
-        }
-
-        window.location.reload()
-
-      })
+      if (updatedPost) {
+        setPost(updatedPost)
+      }
     } catch (error) {
-      console.error("Erro ao apagar comentário: ", error)
+      console.error("Erro ao salvar/desalvar post:", error)
     }
   }
   
@@ -107,6 +107,7 @@ export default function PostCommentsPage() {
             post={post}
             currentUserId={currentUserId}
             onLike={handleLike}
+            onSave={handleSave}
             onEdit={handleEdit}
             isCommentsPage
           />

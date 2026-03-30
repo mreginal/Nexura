@@ -29,8 +29,9 @@ const postSchema = new mongoose.Schema({
         default: 0
     },
     saves:{
-        type: Number,
-        default: 0
+        type: [mongoose.Schema.Types.ObjectId],
+        ref:"User",
+        default: []
     }
 },{timestamps: true})
 

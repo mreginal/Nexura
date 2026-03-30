@@ -77,3 +77,73 @@ export const toggleLikePost = async(req,res)=>{
     return res.status(500).json({message: `Erro no servidor ao curtir postagem: ${error}`})
   }
 }
+
+export async function toggleSavePost(req, res) {
+  try {
+    const postId = req.params.id
+    const userId = req.userId
+
+    if (!userId) {
+      return res.status(401).json({ message: "Usuário não autenticado" })
+    }
+
+    const post = await Post.findById(postId)
+
+    if (!post) {
+      return res.status(404).json({ message: "Post não encontrado" })
+    }
+
+    if (!Array.isArray(post.saves)) {
+      post.saves = []
+    }
+
+    const alreadySaved = post.saves.some(
+      (id) => id.toString() === userId.toString()
+    )
+
+    if (alreadySaved) {
+      post.saves = post.saves.filter(
+        (id) => id.toString() !== userId.toString()
+      )
+    } else {
+      post.saves.push(userId)
+    }
+
+    await post.save()
+
+    const updatedPost = await Post.findById(postId)
+      .populate("user", "name profileImage")
+
+    res.status(200).json({ post: updatedPost })
+  } catch (error) {
+    console.error("ERRO AO SALVAR POST:", error)
+    res.status(500).json({
+      message: "Erro ao salvar post",
+      error: error.message
+    })
+  }
+}
+
+export async function getSavedPosts(req, res) {
+  try {
+    const userId = req.userId
+
+    if (!userId) {
+      return res.status(401).json({ message: "Usuário não autenticado" })
+    }
+
+    const savedPosts = await Post.find({
+      saves: userId
+    })
+      .populate("user", "name profileImage")
+      .sort({ createdAt: -1 })
+
+    res.status(200).json(savedPosts)
+  } catch (error) {
+    console.error("ERRO AO BUSCAR POSTS SALVOS:", error)
+    res.status(500).json({
+      message: "Erro ao buscar posts salvos",
+      error: error.message
+    })
+  }
+}

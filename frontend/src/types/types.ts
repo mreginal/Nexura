@@ -94,7 +94,7 @@ export interface IPost {
   likes: string[]
   commentsCount: number
   shares: number
-  saves: number
+  saves: string[]
   user: IUserPost
 }
 
@@ -157,8 +157,13 @@ export interface PostCardProps {
   post: IPost
   currentUserId: string
   onEdit?: (postId: string, newContent: string) => Promise<void>
-  onLike?: (postId: string) => void
-  onDelete?: (postId: string) => void
+  onLike?: (postId: string) => Promise<void | IPost | null> 
+  onSave?: (postId: string) => Promise<void | IPost | null> 
+  onDelete?: (postId: string) => Promise<boolean | void>
   onCommentCountUpdate?: (postId: string, delta: number) => void
   isCommentsPage?: boolean
+}
+
+export interface SavedPostsProps {
+  currentUserId: string
 }

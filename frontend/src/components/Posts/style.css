@@ -1,58 +1,79 @@
-.modal-overlay, .comments-modal-overlay {
-    position: fixed;
-    right: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    padding: 0px;
-    background: rgba(0, 0, 0, 0.6);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 999;
+/* ----------------------
+   MODAIS
+---------------------- */
+.modal-overlay, 
+.comments-modal-overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
 }
 
-.modal, .comments-modal {
-    width: 100%;
-    max-width: 700px;
-    background: var(--white-bg);
-    border-radius: 20px;
-    padding: 40px;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
-    animation: fadeInModal 0.2s ease;
+.modal, 
+.comments-modal {
+  width: 100%;
+  max-width: 700px;
+  background: var(--white-bg);
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+  animation: fadeInModal 0.2s ease;
 }
 
-.modal-header, .comments-modal-header {
-    position: relative;
-    display: flex;
-    margin-bottom: 22px;
-    justify-content: center;
+@keyframes fadeInModal {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ----------------------
+   MODAL HEADER
+---------------------- */
+.modal-header, 
+.comments-modal-header {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 22px;
 }
 
 .modal-header h2 {
-    font-size: 22px;
-    font-weight: 700;
-    margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0;
 }
 
 .close {
-    all: unset;
-    position: absolute;
-    right: 0;
-    border: none;
-    font-size: 25px;
-    cursor: pointer;
-    transition: 0.2s ease;
-    background: transparent;
-    color: var(--dark-grey);
-    justify-items: end;
+  all: unset;
+  position: absolute;
+  right: 0;
+  font-size: 25px;
+  cursor: pointer;
+  background: transparent;
+  color: var(--dark-grey);
+  transition: 0.2s ease;
 }
 
 .close:hover {
-    background: transparent;
-    color: var(--purple-1);
+  color: var(--purple-1);
+  background: transparent;
 }
 
+/* ----------------------
+   NOVA POSTAGEM
+---------------------- */
 .container-new-post {
   display: flex;
   flex-direction: column;
@@ -112,28 +133,12 @@
 .publish-post-btn:disabled {
   background: var(--medium-grey);
   cursor: not-allowed;
-  box-shadow: none;
-  transform: none;
 }
 
-@keyframes fadeInModal {
-  from {
-    opacity: 0;
-    transform: translateY(-10px) scale(0.98);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-/*
--------------------
-  DESIGN DO POST 
--------------------
-*/
-
-.post{
+/* ----------------------
+   POSTAGEM
+---------------------- */
+.post {
   display: flex;
   flex-direction: column;
   min-width: 46vw;
@@ -144,59 +149,57 @@
   gap: 20px;
 }
 
-.post-header{
+.post-header {
   display: flex;
   gap: 10px;
   align-items: center;
   justify-content: space-between;
 }
 
-.post-header img{
+.post-header img {
   border-radius: 50%;
   height: 50px;
 }
 
-.post-header p{
+.post-header p {
   font-size: 12px;
 }
 
-.post-actions{
-  color: var(--dark-grey);
+.post-actions {
   display: flex;
   justify-content: space-between;
   font-size: 18px;
+  color: var(--dark-grey);
 }
 
-#post-actions-left{
+#post-actions-left {
   display: flex;
   gap: 50px;
 }
 
-/*
--------------------
-  EDITAR POSTAGEM
--------------------
-*/
-
-#modal-edit-post{
+/* ----------------------
+   EDITAR POSTAGEM
+---------------------- */
+#modal-edit-post {
   height: 40vh;
   display: flex;
   flex-direction: column;
   gap: 30px;
 }
 
-#modal-actions-edit{
+#modal-actions-edit {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-#modal-actions-post-edit{
+#modal-actions-post-edit {
   display: flex;
   gap: 10px;
 }
 
-#edit-post-btn, #delete-btn{
+#edit-post-btn, 
+#delete-btn {
   all: unset;
   background: transparent;
   font-size: 25px;
@@ -204,23 +207,27 @@
   cursor: pointer;
 }
 
-/*
------------------------
-  CURTIDAS DA POSTAGEM
------------------------
-*/
-
-.like-btn, .like-btn:hover, .comment-btn{
+/* ----------------------
+   CURTIDAS
+---------------------- */
+.like-btn, 
+.like-btn:hover, 
+.comment-btn, 
+.share-btn, 
+.share-btn:hover, 
+.save-post-btn, 
+.save-post-btn:hover {
   all: unset;
   display: flex;
   align-items: center;
   gap: 5px;
-  background-color: transparent;
+  background: transparent;
   color: var(--medium-grey);
   cursor: pointer;
 }
 
-.heart-icon, .comment-icon {
+.heart-icon, 
+.comment-icon {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -246,71 +253,57 @@
 }
 
 @keyframes popHeart {
-  0% {
-    transform: scale(1);
-  }
-  30% {
-    transform: scale(1.35);
-  }
-  60% {
-    transform: scale(0.9);
-  }
-  100% {
-    transform: scale(1);
-  }
+  0% { transform: scale(1); }
+  30% { transform: scale(1.35); }
+  60% { transform: scale(0.9); }
+  100% { transform: scale(1); }
 }
 
 @keyframes bounceCount {
-  0% {
-    transform: translateY(0);
-  }
-  30% {
-    transform: translateY(-4px);
-  }
-  60% {
-    transform: translateY(2px);
-  }
-  100% {
-    transform: translateY(0);
-  }
+  0% { transform: translateY(0); }
+  30% { transform: translateY(-4px); }
+  60% { transform: translateY(2px); }
+  100% { transform: translateY(0); }
 }
 
-/*
---------------------------
-  COMENTÁRIOS DA POSTAGEM
---------------------------
-*/
-
-.comment-btn:hover{
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  background-color: transparent;
+/* ----------------------
+   COMENTÁRIOS
+---------------------- */
+.comment-btn:hover {
+  background: transparent;
   color: var(--purple-1);
-  cursor: pointer;
 }
 
-.comment-btn span, .comment-btn span:hover{
+.comment-btn span,
+.comment-btn span:hover {
   font-size: 16px;
   color: var(--medium-grey);
 }
 
 .comment-btn.active {
   color: var(--purple-1);
-  cursor:no-drop;
+  cursor: no-drop;
 }
 
-.comments-modal-text{
+.comments-modal-text {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.comments-modal-text textarea{
+.comments-modal-text textarea {
   width: 100%;
   min-height: 150px;
   font-family: inherit;
   padding: 20px;
   border: 2px solid var(--medium-grey);
   border-radius: 15px;
+}
+
+/* ----------------------
+   POSTAGENS SALVAS
+---------------------- */
+
+.save-post-btn .saved{
+  color: var(--purple-1);
 }

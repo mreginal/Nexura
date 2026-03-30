@@ -1,6 +1,6 @@
 import express from "express"
 import Post from "../models/Post.js"
-import { deletePost, toggleLikePost, updatePost } from "../controllers/postController.js"
+import { deletePost, getSavedPosts, toggleLikePost, toggleSavePost, updatePost } from "../controllers/postController.js"
 import { authMiddleware } from "../middlewares/authMiddleware.js"
 
 const router = express.Router()
@@ -19,6 +19,8 @@ router.get("/", async (req, res) => {
 })
 
 // Buscar um post por ID
+router.get("/saved/me", authMiddleware, getSavedPosts)
+
 router.get("/:id", authMiddleware, async (req, res) => {
   try {
     const post = await Post.findById(req.params.id)
@@ -58,5 +60,7 @@ router.post("/", async (req, res) => {
 router.put("/:id", authMiddleware, updatePost)
 router.delete("/:id", authMiddleware, deletePost)
 router.patch("/:id/like", authMiddleware, toggleLikePost)
+router.patch("/:id/save", authMiddleware, toggleSavePost)
+
 
 export default router

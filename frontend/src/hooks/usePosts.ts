@@ -4,8 +4,10 @@ import type { IPost } from "../types/types"
 
 export function usePosts() {
   const [posts, setPosts] = useState<IPost[]>([])
+  const [savedPosts, setSavedPosts] = useState<IPost[]>([])
   const [loadingPosts, setLoadingPosts] = useState(true)
   const [loadingPost, setLoadingPost] = useState(false)
+  const [loadingSavedPosts, setLoadingSavedPosts] = useState(false)
 
   async function loadPosts() {
     try {
@@ -16,6 +18,18 @@ export function usePosts() {
       console.error("Erro ao buscar posts:", error)
     } finally {
       setLoadingPosts(false)
+    }
+  }
+
+  async function loadSavedPosts() {
+    try {
+      setLoadingSavedPosts(true)
+      const response = await api.get("/posts/saved/me")
+      setSavedPosts(response.data)
+    } catch (error) {
+      console.error("Erro ao buscar posts salvos:", error)
+    } finally {
+      setLoadingSavedPosts(false)
     }
   }
 
@@ -40,6 +54,10 @@ export function usePosts() {
         prevPosts.filter((post) => post._id !== postId)
       )
 
+      setSavedPosts((prevSavedPosts) =>
+        prevSavedPosts.filter((post) => post._id !== postId)
+      )
+
       return true
     } catch (error) {
       console.error("Erro ao apagar post:", error)
@@ -57,6 +75,12 @@ export function usePosts() {
 
       setPosts((prevPosts) =>
         prevPosts.map((post) =>
+          post._id === postId ? updatedPost : post
+        )
+      )
+
+      setSavedPosts((prevSavedPosts) =>
+        prevSavedPosts.map((post) =>
           post._id === postId ? updatedPost : post
         )
       )
@@ -79,6 +103,12 @@ export function usePosts() {
         )
       )
 
+      setSavedPosts((prevSavedPosts) =>
+        prevSavedPosts.map((post) =>
+          post._id === postId ? updatedPost : post
+        )
+      )
+
       return updatedPost
     } catch (error) {
       console.error("Erro ao curtir post:", error)
@@ -86,9 +116,40 @@ export function usePosts() {
     }
   }
 
+  async function toggleSavePost(postId: string) {
+    try {
+      const response = await api.patch(`/posts/${postId}/save`)
+      const updatedPost = response.data.post
+
+      setPosts((prevPosts) =>
+        prevPosts.map((post) =>
+          post._id === postId ? updatedPost : post
+        )
+      )
+
+      await loadSavedPosts()
+
+      return updatedPost
+    } catch (error) {
+      console.error("Erro ao salvar post:", error)
+      return null
+    }
+  }
+
   function updateCommentCount(postId: string, delta: number) {
     setPosts((prevPosts) =>
       prevPosts.map((post) =>
+        post._id === postId
+          ? {
+              ...post,
+              commentsCount: Math.max(0, post.commentsCount + delta)
+            }
+          : post
+      )
+    )
+
+    setSavedPosts((prevSavedPosts) =>
+      prevSavedPosts.map((post) =>
         post._id === postId
           ? {
               ...post,
@@ -109,13 +170,17 @@ export function usePosts() {
 
   return {
     posts,
+    savedPosts,
     loadingPosts,
     loadingPost,
+    loadingSavedPosts,
     loadPosts,
+    loadSavedPosts,
     getPostById,
     deletePost,
     updatePost,
     toggleLikePost,
+    toggleSavePost,
     updateCommentCount,
     addNewPost
   }

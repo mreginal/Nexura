@@ -1,6 +1,6 @@
 import { memo } from "react"
 import { useState } from "react"
-import { FaHeart, FaRegHeart, FaEdit } from "react-icons/fa"
+import { FaHeart, FaRegHeart, FaEdit, FaShare, FaBookmark } from "react-icons/fa"
 import type { PostCardProps } from "../../../types/types"
 import "../style.css"
 import { getImageUrl } from "../../../utils/getImageUrl"
@@ -13,11 +13,13 @@ function PostCard({
   currentUserId,
   onEdit,
   onLike,
+  onSave,
   onDelete,
   isCommentsPage
 }: PostCardProps) {
   const isOwner = post.user._id === currentUserId
   const likedByUser = post.likes?.includes(currentUserId) ?? false
+  const savedByUser = post.saves?.includes(currentUserId) ?? false
   const [isAnimating, setIsAnimating] = useState(false)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const navigate = useNavigate()
@@ -89,10 +91,15 @@ function PostCard({
             {isCommentsPage? <IoChatbubbleSharp/> : <IoChatbubbleOutline/>}
             <span>{post.commentsCount}</span>
           </button>
-          <button>{post.shares}</button>
+          <button className="share-btn">
+            <FaShare/> {post.shares}
+          </button>
         </div>
         
-        <button>{post.saves}</button>
+        <button className="save-post-btn" onClick={()=> onSave?.(post._id)} disabled={!onSave}>
+          <FaBookmark className={savedByUser? "saved": ""}/>
+          {post.saves?.length ?? 0}
+        </button>
       </div>
 
       {isEditModalOpen && (
