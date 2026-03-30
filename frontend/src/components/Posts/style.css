@@ -1,0 +1,309 @@
+/* ----------------------
+   MODAIS
+---------------------- */
+.modal-overlay, 
+.comments-modal-overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.modal, 
+.comments-modal {
+  width: 100%;
+  max-width: 700px;
+  background: var(--white-bg);
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+  animation: fadeInModal 0.2s ease;
+}
+
+@keyframes fadeInModal {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ----------------------
+   MODAL HEADER
+---------------------- */
+.modal-header, 
+.comments-modal-header {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 22px;
+}
+
+.modal-header h2 {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.close {
+  all: unset;
+  position: absolute;
+  right: 0;
+  font-size: 25px;
+  cursor: pointer;
+  background: transparent;
+  color: var(--dark-grey);
+  transition: 0.2s ease;
+}
+
+.close:hover {
+  color: var(--purple-1);
+  background: transparent;
+}
+
+/* ----------------------
+   NOVA POSTAGEM
+---------------------- */
+.container-new-post {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.subcontainer-new-post {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#new-post-profile {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.post-user-info h4 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--black);
+}
+
+.post-textarea {
+  width: 100%;
+  min-height: 200px;
+  border: none;
+  outline: none;
+  resize: none;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--black);
+  font-family: inherit;
+  background: transparent;
+}
+
+.post-textarea::placeholder {
+  color: var(--medium-grey);
+}
+
+.publish-post-btn {
+  width: 100%;
+  height: 48px;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--purple-1), var(--purple-2));
+  color: var(--white-bg);
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.publish-post-btn:disabled {
+  background: var(--medium-grey);
+  cursor: not-allowed;
+}
+
+/* ----------------------
+   POSTAGEM
+---------------------- */
+.post {
+  display: flex;
+  flex-direction: column;
+  min-width: 46vw;
+  background: white;
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: 0px 2px 18px 0px var(--medium-grey);
+  gap: 20px;
+}
+
+.post-header {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.post-header img {
+  border-radius: 50%;
+  height: 50px;
+}
+
+.post-header p {
+  font-size: 12px;
+}
+
+.post-actions {
+  display: flex;
+  justify-content: space-between;
+  font-size: 18px;
+  color: var(--dark-grey);
+}
+
+#post-actions-left {
+  display: flex;
+  gap: 50px;
+}
+
+/* ----------------------
+   EDITAR POSTAGEM
+---------------------- */
+#modal-edit-post {
+  height: 40vh;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+#modal-actions-edit {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#modal-actions-post-edit {
+  display: flex;
+  gap: 10px;
+}
+
+#edit-post-btn, 
+#delete-btn {
+  all: unset;
+  background: transparent;
+  font-size: 25px;
+  color: var(--dark-grey);
+  cursor: pointer;
+}
+
+/* ----------------------
+   CURTIDAS
+---------------------- */
+.like-btn, 
+.like-btn:hover, 
+.comment-btn, 
+.share-btn, 
+.share-btn:hover, 
+.save-post-btn, 
+.save-post-btn:hover {
+  all: unset;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: transparent;
+  color: var(--medium-grey);
+  cursor: pointer;
+}
+
+.heart-icon, 
+.comment-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  transition: color 0.2s ease;
+}
+
+.heart-icon.liked {
+  color: var(--purple-1);
+}
+
+.animate-like {
+  animation: popHeart 0.3s ease;
+}
+
+.like-count {
+  font-size: 15px;
+  transition: transform 0.2s ease;
+}
+
+.count-bounce {
+  animation: bounceCount 0.3s ease;
+}
+
+@keyframes popHeart {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.35); }
+  60% { transform: scale(0.9); }
+  100% { transform: scale(1); }
+}
+
+@keyframes bounceCount {
+  0% { transform: translateY(0); }
+  30% { transform: translateY(-4px); }
+  60% { transform: translateY(2px); }
+  100% { transform: translateY(0); }
+}
+
+/* ----------------------
+   COMENTÁRIOS
+---------------------- */
+.comment-btn:hover {
+  background: transparent;
+  color: var(--purple-1);
+}
+
+.comment-btn span,
+.comment-btn span:hover {
+  font-size: 16px;
+  color: var(--medium-grey);
+}
+
+.comment-btn.active {
+  color: var(--purple-1);
+  cursor: no-drop;
+}
+
+.comments-modal-text {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.comments-modal-text textarea {
+  width: 100%;
+  min-height: 150px;
+  font-family: inherit;
+  padding: 20px;
+  border: 2px solid var(--medium-grey);
+  border-radius: 15px;
+}
+
+/* ----------------------
+   POSTAGENS SALVAS
+---------------------- */
+
+.save-post-btn .saved{
+  color: var(--purple-1);
+}

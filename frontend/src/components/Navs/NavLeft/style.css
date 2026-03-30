@@ -12,12 +12,14 @@
     backdrop-filter: blur(1px);
 }
 
-.nav h2{
+#logotipo{
     font-family: var(--font-logo);
     font-size: 40px;
     color: var(--purple-1);
     margin-bottom: 20px;
     align-self: center;
+    text-decoration: none;
+    font-weight: bolder;
 }
 
 .nav-top, .nav-bottom{

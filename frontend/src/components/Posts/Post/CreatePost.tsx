@@ -1,8 +1,8 @@
-import "./style.css"
+import "../style.css"
 import { useState } from "react"
-import type { CreatePostProps} from "../../types/posts"
-import api from "../../services/api"
-import { getImageUrl } from "../../utils/getImageUrl"
+import type { CreatePostProps } from "../../../types/types"
+import api from "../../../services/api"
+import { getImageUrl } from "../../../utils/getImageUrl"
 import { IoCloseCircleOutline } from "react-icons/io5"
 
 type CreatePostModalProps = CreatePostProps & {
@@ -47,7 +47,7 @@ return (
   <div className="modal" onClick={(e) => e.stopPropagation()}>
     <div className="modal-header">
       <h2>Criar publicação</h2>
-      <button id="close" onClick={onClose}><IoCloseCircleOutline/></button>
+      <button className="close" onClick={onClose}><IoCloseCircleOutline/></button>
     </div>
 
     <div className="container-new-post">

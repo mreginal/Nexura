@@ -19,7 +19,7 @@ export default function Nav(){
         <div>
         <nav className="nav">
             <div className="nav-top">
-                <h2>Nexura</h2>
+                <a href="/feed" id="logotipo">Nexura</a>
                 <Link to={"/feed"} className={`item-nav ${location.pathname === "/feed"? "active": ""}`}> <FaNewspaper/> Feed</Link>
                 <Link to={"/explorer"} className={`item-nav ${location.pathname === "/explorer"? "active": ""}`}> <FaSearch/> Explorar</Link>
                 <Link to={"/"} className={`item-nav ${location.pathname === "/notifications"? "active": ""}`}> <FaBell/> Notificações</Link>

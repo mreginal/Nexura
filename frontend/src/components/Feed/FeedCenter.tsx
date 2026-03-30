@@ -1,92 +1,65 @@
 import "./style.css"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { getImageUrl } from "../../utils/getImageUrl"
-import type { FeedCenterProps, IPost, IUserPost } from "../../types/posts"
-import CreatePost from "../Post/CreatePost"
+import type { FeedCenterProps, IPost } from "../../types/types"
+import CreatePost from "../Posts/Post/CreatePost"
 import { FaImage } from "react-icons/fa"
-import api from "../../services/api"
-import PostCard from "../Post/PostCard"
-import EditPostModal from "../Post/EditPostModal"
+import PostCard from "../Posts/Post/PostCard"
+import EditPostModal from "../Posts/Post/EditPostModal"
+import { usePosts } from "../../hooks/usePosts"
+import { useUser } from "../../hooks/useUser"
 
 export default function FeedCenter({ onPostCreated }: FeedCenterProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [user, setUser] = useState<IUserPost | null>(null)
-  const [loadingUser, setLoadingUser] = useState(true)
-  const [posts, setPosts] = useState<IPost[]>([])
+  const [post, setPost] = useState()
+  const { user, loadingUser } = useUser()
   const [editingPost, setEditingPost] = useState<IPost | null>(null)
 
-  async function loadPosts() {
+  const {
+    posts,
+    loadingPosts,
+    deletePost,
+    updatePost,
+    toggleLikePost,
+    toggleSavePost,
+    updateCommentCount,
+    addNewPost
+  } = usePosts()
+
+    async function handleEdit(postId: string, newContent: string) {
     try {
-      const response = await api.get("/posts")
-      setPosts(response.data)
+      const updatedPost = await updatePost(postId, newContent)
+
+      if (updatedPost) {
+        console.log(post)
+        setPost(updatedPost)
+        setEditingPost(null)
+      }
     } catch (error) {
-      console.error(error)
+      console.error("Erro ao editar post:", error)
     }
   }
 
-  useEffect(() => {
-    async function loadUser() {
-      try {
-        const response = await api.get("/me")
-        setUser(response.data.user)
-      } catch (error) {
-        console.error(error)
-      } finally {
-        setLoadingUser(false)
-      }
-    }
-
-    loadUser()
-    loadPosts()
-  }, [])
-
   async function handleDeletePost(postId: string) {
-    try {
-      await api.delete(`/posts/${postId}`)
+    const success = await deletePost(postId)
 
-      setPosts((prevPosts) =>
-        prevPosts.filter((post) => post._id !== postId)
-      )
-
+    if (success) {
       setEditingPost(null)
-    } catch (error) {
-      console.error("Erro ao apagar post:", error)
+    } else {
       alert("Não foi possível apagar o post.")
     }
   }
 
-  function handleOpenEdit(post: IPost) {
-    setEditingPost(post)
-  }
-
-  async function handleSaveEdit(postId: string, newContent: string) {
-    try {
-      const response = await api.put(`/posts/${postId}`, {
-        content: newContent
-      })
-
-      const updatedPost = response.data.post
-
-      setPosts((prevPosts) =>
-        prevPosts.map((post) =>
-          post._id === postId ? updatedPost : post
-        )
-      )
-
-      setEditingPost(null)
-    } catch (error) {
-      console.error("Erro ao editar post:", error)
-      alert("Não foi possível editar o post.")
-    }
-  }
-
-  if (loadingUser) return <div>Carregando usuário...</div>
+  if (loadingUser || loadingPosts) return <div>Carregando...</div>
   if (!user) return <div>Usuário não encontrado.</div>
 
   return (
     <>
       <div className="container-feed-center">
-        <div className="subcontainer-new-post" onClick={() => setIsModalOpen(true)}>
+        <div
+          className="subcontainer-new-post"
+          onClick={() => setIsModalOpen(true)}
+        >
           <button className="open-create-post-btn">
             <div id="button-new-post">
               <img
@@ -105,8 +78,12 @@ export default function FeedCenter({ onPostCreated }: FeedCenterProps) {
             <PostCard
               key={post._id}
               post={post}
-              onEdit={handleOpenEdit}
+              onEdit={handleEdit}
+              onDelete={handleDeletePost}
               currentUserId={user._id}
+              onLike={toggleLikePost}
+              onSave={toggleSavePost}
+              onCommentCountUpdate={updateCommentCount}
             />
           ))
         ) : (
@@ -120,7 +97,7 @@ export default function FeedCenter({ onPostCreated }: FeedCenterProps) {
           userName={user.name}
           userProfileImage={user.profileImage}
           onPostCreated={(newPost) => {
-            setPosts((prevPosts) => [newPost, ...prevPosts])
+            addNewPost(newPost)
             onPostCreated?.(newPost)
           }}
           onClose={() => setIsModalOpen(false)}
@@ -131,7 +108,7 @@ export default function FeedCenter({ onPostCreated }: FeedCenterProps) {
         <EditPostModal
           post={editingPost}
           onClose={() => setEditingPost(null)}
-          onSave={handleSaveEdit}
+          onSave={handleEdit}
           onDelete={handleDeletePost}
         />
       )}
