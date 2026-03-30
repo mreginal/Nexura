@@ -1,5 +1,4 @@
 import mongoose from "mongoose"
-
 const userSchema = new mongoose.Schema({
     name: String,
     email:{
@@ -35,7 +34,21 @@ const userSchema = new mongoose.Schema({
     coverImage: { 
         type: String,
         default: "https://res.cloudinary.com/dvaoigpfv/image/upload/v1774318345/Nexura_1_lqqubt.png"
-    }
+    },
+friends: {
+  type: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+  default: []
+},
+
+friendRequestsSent: {
+  type: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+  default: []
+},
+
+friendRequestsReceived: {
+  type: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+  default: []
+}
 }, {timestamps:true})
 
 export default mongoose.model("User", userSchema)

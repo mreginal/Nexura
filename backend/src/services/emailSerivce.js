@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer"
 
+//Enviar email para usuário resetar a senha
 export const sendResetEmail = async (to, link) => {
   try {
     console.log(process.env.EMAIL_USER)

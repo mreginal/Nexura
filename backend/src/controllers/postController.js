@@ -1,5 +1,6 @@
 import Post from "../models/Post.js"
 
+//Excluir postagem
 export const deletePost = async (req, res) => {
   try {
     const { id } = req.params
@@ -24,6 +25,7 @@ export const deletePost = async (req, res) => {
   }
 }
 
+//Atualizar postagem
 export const updatePost = async (req,res) =>{
   try {
     const {id} = req.params
@@ -49,6 +51,7 @@ export const updatePost = async (req,res) =>{
   }
 }
 
+//Curtir postagem
 export const toggleLikePost = async(req,res)=>{
   try {
     const {id} = req.params
@@ -77,6 +80,8 @@ export const toggleLikePost = async(req,res)=>{
     return res.status(500).json({message: `Erro no servidor ao curtir postagem: ${error}`})
   }
 }
+
+//Salvar postagem
 
 export async function toggleSavePost(req, res) {
   try {
@@ -124,6 +129,7 @@ export async function toggleSavePost(req, res) {
   }
 }
 
+//Pegar postagens salvas pelo usuário
 export async function getSavedPosts(req, res) {
   try {
     const userId = req.userId

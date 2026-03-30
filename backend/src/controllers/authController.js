@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken"
 import crypto from "crypto"
 import { sendResetEmail } from "../services/emailSerivce.js"
 
+//Registrar novo usuário
 export const register = async (req, res) => {
   try {
     const {
@@ -61,6 +62,7 @@ export const register = async (req, res) => {
   }
 }
 
+//Fazer login do usuário
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body
@@ -98,6 +100,8 @@ export const login = async (req, res) => {
   }
 }
 
+
+//Redefinir senha do usuário
 export const forgotPassword = async (req, res) => {
   try {
     const { email } = req.body
@@ -162,5 +166,45 @@ export const resetPassword = async (req, res) => {
 
   } catch (err) {
     res.status(500).json({ error: err.message })
+  }
+}
+
+// Buscar usuário logado
+export const getMe = async (req, res) => {
+  try {
+    const user = await User.findById(req.userId)
+      .populate("friends", "name profileImage username")
+      .populate("friendRequestsSent", "name profileImage username")
+      .populate("friendRequestsReceived", "name profileImage username")
+
+    if (!user) {
+      return res.status(404).json({ error: "Usuário não encontrado" })
+    }
+
+    return res.status(200).json({ user })
+  } catch (err) {
+    console.error("Erro ao buscar usuário logado:", err)
+    return res.status(500).json({ error: err.message })
+  }
+}
+
+// Buscar perfil por ID
+export const getUserById = async (req, res) => {
+  try {
+    const { id } = req.params
+
+    const user = await User.findById(id)
+      .populate("friends", "name profileImage username")
+      .populate("friendRequestsSent", "name profileImage username")
+      .populate("friendRequestsReceived", "name profileImage username")
+
+    if (!user) {
+      return res.status(404).json({ error: "Usuário não encontrado" })
+    }
+
+    return res.status(200).json({ user })
+  } catch (err) {
+    console.error("Erro ao buscar perfil:", err)
+    return res.status(500).json({ error: err.message })
   }
 }

@@ -1,5 +1,6 @@
 import mongoose from "mongoose"
 
+//Conectar ao Banco de Dados
 const connectDB = async ()=>{
     try {
         await mongoose.connect(process.env.MONGO_URI)

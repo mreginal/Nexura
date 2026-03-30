@@ -3,9 +3,9 @@ import { register, login, resetPassword, forgotPassword } from "../controllers/a
 
 const router = express.Router()
 
-router.post("/register", register)
-router.post("/login", login)
-router.post("/forgot-password", forgotPassword)
-router.post("/reset-password", resetPassword)
+router.post("/register", register) //Registrar usuário
+router.post("/login", login) // Login usuário
+router.post("/forgot-password", forgotPassword) // Esqueceu a senha
+router.post("/reset-password", resetPassword) // Resetar a senha
 
 export default router

@@ -1,7 +1,7 @@
 import express from "express"
 import Post from "../models/Post.js"
 import { deletePost, getSavedPosts, toggleLikePost, toggleSavePost, updatePost } from "../controllers/postController.js"
-import { authMiddleware } from "../middlewares/authMiddleware.js"
+import {authMiddleware} from "../middlewares/authMiddleware.js"
 
 const router = express.Router()
 

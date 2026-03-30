@@ -2,6 +2,7 @@ import mongoose from "mongoose"
 import Comment from "../models/Comments.js"
 import Post from "../models/Post.js"
 
+//Pegar todos os comentários de uma postagem
 export const getCommentsByPost = async (req, res) => {
   try {
     const { postId } = req.params
@@ -21,6 +22,7 @@ export const getCommentsByPost = async (req, res) => {
   }
 }
 
+//Criar comentário em uma postagem
 export const createComment = async (req, res) => {
   try {
     const { postId } = req.params
@@ -67,6 +69,7 @@ export const createComment = async (req, res) => {
   }
 }
 
+//Deletar comentário de uma postagem
 export const deleteComment = async (req, res) => {
   try {
     const { commentId } = req.params

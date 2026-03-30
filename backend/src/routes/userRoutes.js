@@ -21,22 +21,28 @@ const storage = multer.diskStorage({
   filename: (req, file, cb) => {
     const fileName = Date.now() + path.extname(file.originalname)
     cb(null, fileName)
-  },
+  }
 })
 
 const upload = multer({ storage })
 
 // Buscar usuário por ID
-router.get("/users/:id", async (req, res) => {
+router.get("/users/:id", authMiddleware, async (req, res) => {
   try {
     const user = await User.findById(req.params.id)
+      .populate("friends", "name profileImage username")
+      .populate("friendRequestsSent", "name profileImage username")
+      .populate("friendRequestsReceived", "name profileImage username")
 
-    const posts = await Post
-      .find({ user: req.params.id })
-      .sort({ createdAt: -1 })
+    if (!user) {
+      return res.status(404).json({ error: "Usuário não encontrado" })
+    }
+
+    const posts = await Post.find({ user: req.params.id }).sort({ createdAt: -1 })
 
     res.json({ user, posts })
   } catch (err) {
+    console.error("Erro em /users/:id:", err)
     res.status(500).json({ error: err.message })
   }
 })
@@ -45,20 +51,29 @@ router.get("/users/:id", async (req, res) => {
 router.get("/me", authMiddleware, async (req, res) => {
   try {
     const user = await User.findById(req.userId)
+      .populate("friends", "name profileImage username")
+      .populate("friendRequestsSent", "name profileImage username")
+      .populate("friendRequestsReceived", "name profileImage username")
 
-    const posts = await Post
-      .find({ user: req.userId })
-      .sort({ createdAt: -1 })
+    if (!user) {
+      return res.status(404).json({ error: "Usuário não encontrado" })
+    }
+
+    const posts = await Post.find({ user: req.userId }).sort({ createdAt: -1 })
 
     res.json({ user, posts })
   } catch (err) {
+    console.error("Erro em /me:", err)
     res.status(500).json({ error: err.message })
   }
 })
 
-router.put("/update", authMiddleware, upload.fields([
+router.put(
+  "/update",
+  authMiddleware,
+  upload.fields([
     { name: "profileImage", maxCount: 1 },
-    { name: "coverImage", maxCount: 1 },
+    { name: "coverImage", maxCount: 1 }
   ]),
   async (req, res) => {
     try {
@@ -80,14 +95,16 @@ router.put("/update", authMiddleware, upload.fields([
           "/uploads/" + req.files.coverImage[0].filename
       }
 
-      const updatedUser = await User.findByIdAndUpdate(
-        userId,
-        updateData,
-        { new: true }
-      )
+      const updatedUser = await User.findByIdAndUpdate(userId, updateData, {
+        new: true
+      })
+        .populate("friends", "name profileImage username")
+        .populate("friendRequestsSent", "name profileImage username")
+        .populate("friendRequestsReceived", "name profileImage username")
 
       res.json({ user: updatedUser })
     } catch (error) {
+      console.error("Erro em /update:", error)
       res.status(500).json({ error: error.message })
     }
   }

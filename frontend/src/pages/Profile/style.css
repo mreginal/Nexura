@@ -35,12 +35,16 @@
     margin-top: -75px;
 }
 
-/*Esse parágrafo é a bio (lembrar)*/
+/*Esse parágrafo é a bio*/
+
 .profile-infos p{
     margin: 40px;
     color: var(--dark-grey);
     font-weight: 600;
+    max-width: 500px;
 }
+
+/**/
 
 .infos{
     display: flex;
@@ -61,6 +65,11 @@
     color: var(--purple-1);
     font-weight: bold;
 }
+
+
+/* ----------------------
+   NAVEGAÇÃO DO PERFIL
+---------------------- */
 
 .tabs-container {
     display: flex;
@@ -113,9 +122,86 @@
     margin-bottom:30px ;
 }
 
-#button-edit-profile{
-    background: none;
+/* -----------------------------------------
+   SOLICITAÇÃO DE AMIZADE / EDIÇÃO DE POST
+-------------------------------------------- */
+
+.profile-actions{
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+    margin-right: 80px;
+}
+
+.profile-actions-btn, .profile-actions-btn:hover{
+    all: unset;
+    display: flex;
+    flex-direction: column;
+    align-items: end;
     color: var(--dark-grey);
     font-size: 30px;
     align-self: flex-end;
+    cursor: pointer;
+}
+
+#remove-friend:hover{
+    color: var(--purple-2);
+}
+
+#add-friend:hover{
+    color: var(--purple-1);
+}
+
+
+/* ------------------------
+   ABA DE AMIGOS NO PERFIL
+--------------------------- */
+
+.friend-card{
+    height: 30px;
+    max-width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0px 2px 18px 0px var(--medium-grey);
+    gap: 20px;
+}
+
+.friend-card img{
+    height: 50px;
+    border-radius: 50%;
+}
+
+.friend-card h3{
+    color: black;
+    font-size: 20px;
+}
+
+.friend-card a{
+    text-decoration: none;
+}
+
+#friend-card-infos{
+    display: flex;
+    flex-direction: column;
+    color: black;
+}
+
+.profile-friend{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#find{
+    font-size: 25px;
+    color: var(--dark-grey);
+    cursor: pointer;
+}
+
+.friend-request-actions{
+    display: flex;
+    gap: 20px;
 }

@@ -60,10 +60,14 @@ export interface LocationState {
 export interface IUser {
   _id: string
   name: string
+  username: string
   email: string
   profileImage?: string
   coverImage?: string
   bio?: string
+  friends: IUser[]
+  friendRequestsSent: IUser[]
+  friendRequestsReceived: IUser[]
 }
 
 //Usuário para postagens

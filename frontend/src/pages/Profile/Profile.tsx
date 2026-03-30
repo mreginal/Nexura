@@ -1,23 +1,30 @@
 import "./style.css"
+import { useEffect, useMemo, useState } from "react"
+import { Link, useLocation, useParams } from "react-router-dom"
+import { FaEdit, FaSearchPlus, FaUserClock, FaUserEdit, FaUserMinus, FaUserPlus } from "react-icons/fa"
+import type { LocationState, IPost, IUser } from "../../types/types"
+
+// Componentes
 import Nav from "../../components/Navs/NavLeft/Nav"
 import NavRight from "../../components/Navs/NavRight/NavRight"
-import { useMemo, useState } from "react"
-import { useLocation, useParams } from "react-router-dom"
-import type { LocationState, IPost } from "../../types/types"
 import EditProfileModal from "../../components/EditProfileModal/EditProfileModal"
-import { FaEdit } from "react-icons/fa"
-import { getImageUrl } from "../../utils/getImageUrl"
 import PostCard from "../../components/Posts/Post/PostCard"
 import EditPostModal from "../../components/Posts/Post/EditPostModal"
+import SavedPosts from "../Post/SavedPosts"
+
+// Hooks
+import { getImageUrl } from "../../utils/getImageUrl"
 import { useUser } from "../../hooks/useUser"
 import { usePosts } from "../../hooks/usePosts"
-import SavedPosts from "../Post/SavedPosts"
+import { useFriends } from "../../hooks/useFriends"
+
+type FriendStatus = "friend" | "sent" | "received" | "none"
 
 export default function Profile() {
   const { userId } = useParams()
 
-  // Usuário que foi visitado
-  const { user: profileUser, loadingUser, loadUser } = useUser(userId)
+  // Usuário visitado
+  const { user: profileUser, loadingUser } = useUser(userId)
 
   // Usuário logado
   const { user: loggedUser, loadingUser: loadingLoggedUser } = useUser()
@@ -25,9 +32,12 @@ export default function Profile() {
   const location = useLocation()
   const state = location.state as LocationState | undefined
   const defaultTab = state?.tab || "posts"
+
   const [activeTab, setActiveTab] = useState(defaultTab)
   const [modalOpen, setModalOpen] = useState(false)
   const [editingPost, setEditingPost] = useState<IPost | null>(null)
+  const [friendStatus, setFriendStatus] = useState<FriendStatus>("none")
+  const [friendActionLoading, setFriendActionLoading] = useState(false)
 
   const {
     posts,
@@ -38,10 +48,46 @@ export default function Profile() {
     toggleSavePost
   } = usePosts()
 
+  const {
+    sendRequest,
+    acceptRequest,
+    rejectRequest,
+    cancelRequest,
+    removeFriend
+  } = useFriends()
+
+  // Posts do usuário visitado
   const userPosts = useMemo(() => {
     if (!profileUser) return []
     return posts.filter((post) => post.user._id === profileUser._id)
   }, [posts, profileUser])
+
+  // Detecta status inicial de amizade
+  useEffect(() => {
+    if (!profileUser || !loggedUser) return
+
+    const isFriend = loggedUser.friends?.some(
+      (friend: IUser) => friend._id === profileUser._id
+    )
+
+    const sentRequest = loggedUser.friendRequestsSent?.some(
+      (user: IUser) => user._id === profileUser._id
+    )
+
+    const receivedRequest = loggedUser.friendRequestsReceived?.some(
+      (user: IUser) => user._id === profileUser._id
+    )
+
+    if (isFriend) {
+      setFriendStatus("friend")
+    } else if (receivedRequest) {
+      setFriendStatus("received")
+    } else if (sentRequest) {
+      setFriendStatus("sent")
+    } else {
+      setFriendStatus("none")
+    }
+  }, [loggedUser, profileUser])
 
   if (loadingUser || loadingLoggedUser || loadingPosts) {
     return <p>Carregando...</p>
@@ -51,9 +97,15 @@ export default function Profile() {
     return <p>Erro ao carregar perfil</p>
   }
 
-  const currentUserId = loggedUser._id
-  const isOwnProfile = loggedUser._id === profileUser._id
+  const safeProfileUser = profileUser
+  const safeLoggedUser = loggedUser
 
+  const profileFriends = safeProfileUser.friends || []
+
+  const currentUserId = safeLoggedUser._id
+  const isOwnProfile = safeLoggedUser._id === profileUser._id
+
+  // Posts
   async function handleDeletePost(postId: string) {
     const confirmDelete = window.confirm("Tem certeza que deseja apagar este post?")
     if (!confirmDelete) return
@@ -89,6 +141,68 @@ export default function Profile() {
     }
   }
 
+  // Amizade
+
+  async function runFriendAction(
+    action: () => Promise<unknown>,
+    nextStatus: FriendStatus,
+    errorMessage: string
+  ) {
+    try {
+      setFriendActionLoading(true)
+      await action()
+      setFriendStatus(nextStatus)
+    } catch (error) {
+      console.error(errorMessage, error)
+      alert(errorMessage)
+    } finally {
+      setFriendActionLoading(false)
+    }
+  }
+
+  async function handleSendFriendRequest() {
+    await runFriendAction(
+      () => sendRequest(safeProfileUser._id),
+      "sent",
+      "Não foi possível enviar a solicitação."
+    )
+  }
+
+  async function handleAcceptFriendRequest() {
+    await runFriendAction(
+      () => acceptRequest(safeProfileUser._id),
+      "friend",
+      "Não foi possível aceitar a solicitação."
+    )
+  }
+
+  async function handleRejectFriendRequest() {
+    await runFriendAction(
+      () => rejectRequest(safeProfileUser._id),
+      "none",
+      "Não foi possível recusar a solicitação."
+    )
+  }
+
+  async function handleCancelFriendRequest() {
+    await runFriendAction(
+      () => cancelRequest(safeProfileUser._id),
+      "none",
+      "Não foi possível cancelar a solicitação."
+    )
+  }
+
+  async function handleRemoveFriend() {
+    const confirmRemove = window.confirm("Deseja remover este amigo?")
+    if (!confirmRemove) return
+
+    await runFriendAction(
+      () => removeFriend(safeProfileUser._id),
+      "none",
+      "Não foi possível remover o amigo."
+    )
+  }
+
   return (
     <div className="container-profile">
       <Nav />
@@ -115,14 +229,61 @@ export default function Profile() {
             <p>{profileUser.bio || `Biografia de ${profileUser.name}`}</p>
             <div className="progress-bar"></div>
 
-            {isOwnProfile && (
-              <button
-                id="button-edit-profile"
-                onClick={() => setModalOpen(true)}
-              >
-                <FaEdit />
-              </button>
-            )}
+            <div className="profile-actions">
+              {isOwnProfile ? (
+                <button
+                  className="profile-actions-btn"
+                  onClick={() => setModalOpen(true)}
+                >
+                  <FaEdit />
+                </button>
+              ) : friendStatus === "friend" ? (
+                <button
+                  onClick={handleRemoveFriend}
+                  disabled={friendActionLoading}
+                  className="profile-actions-btn"
+                  id="remove-friend"
+                >
+                  {friendActionLoading ? <FaUserEdit/> : <FaUserMinus/>}
+                </button>
+              ) : friendStatus === "received" ? (
+                <div className="friend-request-actions">
+                  <button
+                    onClick={handleAcceptFriendRequest}
+                    disabled={friendActionLoading}
+                  >
+                    {friendActionLoading ? <FaUserClock/> : "Aceitar amizade"}
+                  </button>
+
+                  <button
+                    onClick={handleRejectFriendRequest}
+                    disabled={friendActionLoading}
+                  >
+                    Recusar
+                  </button>
+                </div>
+              ) : friendStatus === "sent" ? (
+                <button
+                  onClick={handleCancelFriendRequest}
+                  disabled={friendActionLoading}
+                  className="profile-actions-btn"
+                  id="remove-friend"
+                  title="Cancelar solicitação"
+                >
+                  <FaUserClock />
+                </button>
+              ) : (
+                <button
+                  onClick={handleSendFriendRequest}
+                  disabled={friendActionLoading}
+                  className="profile-actions-btn"
+                  id="add-friend"
+                  title="Adicionar amigo"
+                >
+                  <FaUserPlus />
+                </button>
+              )}
+            </div>
           </div>
         </div>
 
@@ -187,7 +348,25 @@ export default function Profile() {
 
           {activeTab === "friends" && (
             <div className="friends">
-              <p>Lista de amigos (em breve)</p>
+              {profileFriends.length === 0? (
+                <p>Não há ninguém para mostrar</p>
+              ):(
+                profileFriends.map((friend) => (
+                  <div className="friend-card" key={friend._id}>
+                      <div className="profile-friend">
+                        <img src={getImageUrl(friend.profileImage)} alt={"Foto de Perfil"}/>
+                        <div id="friend-card-infos">
+                          <Link to={`/profile/${friend._id}`} id="find"> 
+                            <h3>{friend.name}</h3>
+                          </Link>
+                          <p>{friend.username}</p>
+                      </div>
+                    </div>
+                    <Link to={`/profile/${friend._id}`} id="find"> <FaSearchPlus/></Link>
+                  </div>
+                ))
+              )
+              }
             </div>
           )}
 
@@ -203,7 +382,7 @@ export default function Profile() {
         <EditProfileModal
           user={profileUser}
           onClose={() => setModalOpen(false)}
-          onUpdate={loadUser}
+          onUpdate={() => {}}
         />
       )}
 
@@ -215,7 +394,6 @@ export default function Profile() {
           onDelete={handleDeletePost}
         />
       )}
-
       <NavRight />
     </div>
   )
